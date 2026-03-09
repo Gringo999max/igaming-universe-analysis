@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Gambling TAM ~$100B+ — Market Map</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c18;color:#e0e0e0;font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;height:100vh}
+svg{width:100%;height:100%}
+#title{position:absolute;top:16px;left:50%;transform:translateX(-50%);text-align:center;z-index:50}
+#title h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,#00e5ff,#7c4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#title p{font-size:11px;opacity:.5;margin-top:3px}
+#tooltip{position:absolute;padding:12px 16px;background:rgba(12,16,32,.95);border:1px solid rgba(0,229,255,.3);border-radius:8px;font-size:12px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;max-width:340px;backdrop-filter:blur(10px);z-index:100;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+#tooltip .t{font-weight:700;font-size:14px;margin-bottom:4px;color:#fff}
+#tooltip .s{font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;opacity:.6}
+#tooltip .r{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+#tooltip .l{opacity:.5}
+#tooltip .v{font-weight:600}
+#legend{position:absolute;bottom:16px;left:16px;background:rgba(12,16,32,.92);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 18px;font-size:11px;backdrop-filter:blur(10px);z-index:50}
+#legend h3{font-size:12px;margin-bottom:8px;color:#fff}
+.li{display:flex;align-items:center;margin:3px 0}
+.ld{width:10px;height:10px;border-radius:50%;margin-right:8px;flex-shrink:0}
+#controls{position:absolute;top:16px;right:16px;display:flex;gap:6px;z-index:50}
+.btn{padding:6px 14px;background:rgba(12,16,32,.9);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:#ccc;cursor:pointer;font-size:11px;transition:all .2s}
+.btn:hover{border-color:#00e5ff;color:#00e5ff}
+</style>
+</head>
+<body>
+<div id="title">
+<h1>ONLINE GAMBLING TAM — $107B+ (2025)</h1>
+<p>Full market breakdown · Segments · Sub-segments · Key players · Growth rates</p>
+</div>
+<div id="controls">
+<button class="btn" onclick="resetZoom()">Reset</button>
+<button class="btn" onclick="toggleLabels()">Labels</button>
+<button class="btn" onclick="exportPNG()">PNG</button>
+</div>
+<div id="legend">
+<h3>SEGMENTS</h3>
+<div class="li"><div class="ld" style="background:#ff9800"></div>Sports Betting (~52%)</div>
+<div class="li"><div class="ld" style="background:#e040fb"></div>Online Casino (~35%)</div>
+<div class="li"><div class="ld" style="background:#00e676"></div>Poker (~5%)</div>
+<div class="li"><div class="ld" style="background:#42a5f5"></div>Lottery (~5%)</div>
+<div class="li"><div class="ld" style="background:#ef5350"></div>Esports (~3%)</div>
+<div class="li"><div class="ld" style="background:#ffd600"></div>Key Players</div>
+<div class="li"><div class="ld" style="background:#00e5ff;box-shadow:0 0 6px #00e5ff"></div>TAM Center</div>
+<div class="li"><div class="ld" style="background:#78909c"></div>Markets / Regions</div>
+</div>
+<div id="tooltip"></div>
+<script>
+var W=window.innerWidth,H=window.innerHeight;
+var nodes=[
+// CENTER
+{id:"tam",label:"Online Gambling\n$107B+ (2025)",group:"center",size:55,metrics:{"Total Market (2025)":"$107-118B","H2GC Total Gambling":"$573B (2024)","Online Share":"~20-25%","CAGR 2025-2030":"11.7-11.9%","Projected 2030":"$153-186B","Mobile Share":"71.7%","Crypto Gambling":"$81.4B (2025)"}},
+
+// SPORTS BETTING
+{id:"sports",label:"Sports Betting\n~$56B (52%)",group:"sports",size:40,metrics:{"GGR 2025":"~$56B","Share":"52%","CAGR":"11.75%","Driver":"Live betting, US legalization","Mobile":"85%+ of bets"}},
+{id:"sp_live",label:"Live/In-Play\n~$30B",group:"sports",size:22,metrics:{"Share of Sports":"~55%","Growth":"Fastest sub-segment","Tech":"Real-time odds, cash-out"}},
+{id:"sp_pre",label:"Pre-Match\n~$20B",group:"sports",size:18,metrics:{"Share":"~35%","Trend":"Declining share vs live","Core":"Football, basketball, tennis"}},
+{id:"sp_props",label:"Props & Micro\n~$6B",group:"sports",size:14,metrics:{"Type":"Player props, micro-bets","Growth":"Explosive in US","Driver":"FanDuel, DraftKings"}},
+{id:"sp_flutter",label:"Flutter/FanDuel",group:"player",size:16,metrics:{"Revenue":"$16.4B (2025)","US Share":"~40%","MCap":"$35B"}},
+{id:"sp_dk",label:"DraftKings",group:"player",size:14,metrics:{"Revenue":"$6.05B (+27%)","US Share":"~30%","First Profit":"$3.7M (2025)"}},
+{id:"sp_bet365",label:"Bet365",group:"player",size:15,metrics:{"Revenue":"£4.04B","Type":"Largest private","Global":"190+ countries"}},
+{id:"sp_entain",label:"Entain/BetMGM",group:"player",size:13,metrics:{"NGR":"£6.4B (incl BetMGM)","Brands":"Ladbrokes, Coral, bwin","US":"BetMGM #3"}},
+
+// ONLINE CASINO
+{id:"casino",label:"Online Casino\n~$37B (35%)",group:"casino",size:38,metrics:{"GGR 2025":"~$37B","Share":"~35%","CAGR":"13.92%","Note":"Fastest-growing major segment"}},
+{id:"ca_slots",label:"Slots (RNG)\n~$19B",group:"casino",size:26,metrics:{"Share of Casino":"~50-55%","GGR":"~$19B","CAGR":"6-8%","Status":"Dominant but maturing","Top":"Pragmatic, NetEnt, Play'n GO"}},
+{id:"ca_live",label:"Live Casino\n~$8B",group:"casino",size:22,metrics:{"Share":"~20-25%","GGR":"~$8B","CAGR":"12-15%","Monopoly":"Evolution 60%+ share","Revenue Evo":"EUR 2.07B"}},
+{id:"ca_crash",label:"Crash/Instant\n~$3B",group:"casino",size:20,metrics:{"Share":"~5-8%","GGR":"~$1-3B (growing fast)","CAGR":"25-30%","Leader":"Spribe/Aviator 90%+","Wagers":"EUR 160B/yr","Players":"380M total"}},
+{id:"ca_table",label:"Table Games\n~$4B",group:"casino",size:16,metrics:{"Share":"~10%","Types":"Blackjack, Roulette, Baccarat","Trend":"RNG declining, Live growing"}},
+{id:"ca_virtual",label:"Virtual Sports\n~$3B",group:"casino",size:14,metrics:{"Type":"24/7 simulated events","Growth":"10-12% CAGR","Driver":"Betway, Betradar"}},
+{id:"ca_evo",label:"Evolution",group:"player",size:18,metrics:{"Revenue":"EUR 2.07B","MCap":"$13.4B","EBITDA":"66.1%","P/S":"4.9x","Employees":"20,000+"}},
+{id:"ca_prag",label:"Pragmatic Play",group:"player",size:15,metrics:{"Revenue":"~$750M","Type":"Private","Products":"Slots + Live + Crash","Crash":"Spaceman"}},
+{id:"ca_spribe",label:"Spribe",group:"player",size:16,metrics:{"Revenue":"~$500M","Valuation":"$1.5-2B","Players":"380M","Bets/min":"350,000","Take Rate":"9% GGR"}},
+
+// POKER
+{id:"poker",label:"Online Poker\n~$5B (5%)",group:"poker",size:20,metrics:{"GGR":"~$5B","Share":"~5%","CAGR":"~8-10%","Status":"Mature, stable","Leader":"PokerStars (Flutter)"}},
+{id:"pk_cash",label:"Cash Games",group:"poker",size:12,metrics:{"Share":"~60% of poker","Trend":"Stable"}},
+{id:"pk_tourney",label:"Tournaments",group:"poker",size:12,metrics:{"Share":"~40% of poker","Growth":"WSOP online, GGPoker"}},
+
+// LOTTERY
+{id:"lottery",label:"Online Lottery\n~$5B (5%)",group:"lottery",size:18,metrics:{"GGR":"~$5B","Share":"~5%","CAGR":"5.7%","Type":"State-run digitization","Key":"Lotto, scratch cards"}},
+
+// ESPORTS
+{id:"esports",label:"Esports Betting\n~$3B (3%)",group:"esports",size:16,metrics:{"GGR":"~$3B","Share":"~3%","CAGR":"15%+","Handle":"$120B+","Games":"CS2, LoL, Dota 2, Valorant"}},
+
+// REGIONS
+{id:"r_us",label:"USA\n$10.7B iGaming",group:"region",size:20,metrics:{"iGaming 2025":"$10.74B (+27.6%)","Sports Betting":"$12B+","States iGaming":"8","States Sports":"38","CAGR":"16.5%","Top":"PA $3.37B, MI $2.99B, NJ $2.82B"}},
+{id:"r_eu",label:"Europe\n€123B total",group:"region",size:22,metrics:{"Total GGR":"€123.4B (2024)","Online Share":"Growing to 50%+","Key":"UK £15B, Germany €14B, Italy €2.2B","Regulation":"Mature, tightening"}},
+{id:"r_latam",label:"LatAm\n$10B+",group:"region",size:18,metrics:{"Brazil":"$7B (newly regulated)","Colombia":"$700M+","Mexico":"$2B+ (grey)","CAGR":"30%+","Driver":"Brazil regulation 2025"}},
+{id:"r_africa",label:"Africa\n$5B+",group:"region",size:17,metrics:{"Nigeria":"$3.63B","SA":"EUR 2.91B","Kenya":"$1B+","Driver":"Mobile money, youth","CAGR":"50%+"}},
+{id:"r_asia",label:"Asia\n$15B+",group:"region",size:19,metrics:{"India":"$3.7B → $10.8B by 2030","Philippines":"$1.9B (PAGCOR)","Japan":"$8B+ (illegal online)","China":"Underground only","Driver":"Mobile, UPI, grey markets"}},
+
+// CRYPTO
+{id:"crypto",label:"Crypto Gambling\n$81.4B",group:"region",size:20,metrics:{"Total 2025":"$81.4B","Growth":"5x since 2022","Leader":"Stake.com ($4.7B GGR)","Tokens":"BTC, ETH, USDT","Trend":"Mainstream adoption"}},
+];
+
+var links=[
+// TAM → Segments
+{source:"tam",target:"sports",v:3},{source:"tam",target:"casino",v:3},{source:"tam",target:"poker",v:2},{source:"tam",target:"lottery",v:2},{source:"tam",target:"esports",v:2},
+
+// Sports sub
+{source:"sports",target:"sp_live",v:2},{source:"sports",target:"sp_pre",v:2},{source:"sports",target:"sp_props",v:1.5},
+{source:"sports",target:"sp_flutter",v:1.5},{source:"sports",target:"sp_dk",v:1.5},{source:"sports",target:"sp_bet365",v:1.5},{source:"sports",target:"sp_entain",v:1.5},
+
+// Casino sub
+{source:"casino",target:"ca_slots",v:2},{source:"casino",target:"ca_live",v:2},{source:"casino",target:"ca_crash",v:2},{source:"casino",target:"ca_table",v:1.5},{source:"casino",target:"ca_virtual",v:1.5},
+{source:"ca_live",target:"ca_evo",v:1.5},{source:"ca_slots",target:"ca_prag",v:1.5},{source:"ca_crash",target:"ca_spribe",v:2},
+
+// Poker sub
+{source:"poker",target:"pk_cash",v:1.5},{source:"poker",target:"pk_tourney",v:1.5},
+
+// Regions
+{source:"tam",target:"r_us",v:1.5},{source:"tam",target:"r_eu",v:1.5},{source:"tam",target:"r_latam",v:1.5},{source:"tam",target:"r_africa",v:1.5},{source:"tam",target:"r_asia",v:1.5},{source:"tam",target:"crypto",v:1.5},
+
+// Cross-links
+{source:"ca_spribe",target:"r_africa",v:1},{source:"ca_spribe",target:"r_asia",v:1},{source:"sp_flutter",target:"r_us",v:1},{source:"sp_dk",target:"r_us",v:1},{source:"crypto",target:"r_asia",v:1},
+];
+
+var colors={center:"#00e5ff",sports:"#ff9800",casino:"#e040fb",poker:"#00e676",lottery:"#42a5f5",esports:"#ef5350",player:"#ffd600",region:"#78909c"};
+
+var svg=d3.select("body").append("svg").attr("width",W).attr("height",H);
+var defs=svg.append("defs");
+var fl=defs.append("filter").attr("id","glow");
+fl.append("feGaussianBlur").attr("stdDeviation","4").attr("result","b");
+var fm=fl.append("feMerge");fm.append("feMergeNode").attr("in","b");fm.append("feMergeNode").attr("in","SourceGraphic");
+
+Object.entries(colors).forEach(function(e){
+var g=defs.append("radialGradient").attr("id","g-"+e[0]).attr("cx","30%").attr("cy","30%");
+g.append("stop").attr("offset","0%").attr("stop-color",d3.color(e[1]).brighter(1));
+g.append("stop").attr("offset","100%").attr("stop-color",e[1]);
+});
+
+var g=svg.append("g");
+var zoom=d3.zoom().scaleExtent([.15,4]).on("zoom",function(e){g.attr("transform",e.transform)});
+svg.call(zoom);
+
+var sim=d3.forceSimulation(nodes)
+.force("link",d3.forceLink(links).id(function(d){return d.id}).distance(function(d){return d.source.id==="tam"?220:130}).strength(function(d){return d.source.id==="tam"?.4:.25}))
+.force("charge",d3.forceManyBody().strength(function(d){return d.id==="tam"?-2500:-350}))
+.force("center",d3.forceCenter(W/2,H/2))
+.force("collision",d3.forceCollide().radius(function(d){return d.size+12}))
+.force("x",d3.forceX(W/2).strength(.03))
+.force("y",d3.forceY(H/2).strength(.03));
+
+var link=g.append("g").selectAll("line").data(links).join("line")
+.attr("stroke",function(d){return colors[typeof d.source==="object"?d.source.group:nodes.find(function(n){return n.id===d.source}).group]||"#555"})
+.attr("stroke-width",function(d){return d.v})
+.attr("stroke-opacity",.3);
+
+var node=g.append("g").selectAll("g").data(nodes).join("g")
+.call(d3.drag().on("start",function(e,d){if(!e.active)sim.alphaTarget(.3).restart();d.fx=d.x;d.fy=d.y}).on("drag",function(e,d){d.fx=e.x;d.fy=e.y}).on("end",function(e,d){if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null}));
+
+node.append("circle").attr("r",function(d){return d.size+3}).attr("fill","none")
+.attr("stroke",function(d){return colors[d.group]}).attr("stroke-width",function(d){return d.id==="tam"?3:1.2}).attr("stroke-opacity",.3).attr("filter","url(#glow)");
+
+node.append("circle").attr("r",function(d){return d.size})
+.attr("fill",function(d){return "url(#g-"+d.group+")"})
+.attr("stroke",function(d){return d3.color(colors[d.group]).brighter(.4)})
+.attr("stroke-width",function(d){return d.id==="tam"?3:1.2}).attr("opacity",.9);
+
+var labelsOn=true;
+var labels=node.append("text").each(function(d){
+var lines=d.label.split("\n");
+var el=d3.select(this);
+lines.forEach(function(line,i){
+el.append("tspan").attr("x",0).attr("dy",i===0?(-lines.length*6+d.size+16)+"px":"14px")
+.text(line).attr("font-weight",i===0?600:700);
+});
+}).attr("text-anchor","middle").attr("font-size",function(d){return d.id==="tam"?13:d.size>20?11:10})
+.attr("fill",function(d){return colors[d.group]}).attr("opacity",.9)
+.style("text-shadow","0 0 8px rgba(0,0,0,.9)");
+
+var tooltip=d3.select("#tooltip");
+node.on("mouseover",function(event,d){
+var h='<div class="t">'+d.label.replace("\n"," — ")+'</div><div class="s" style="color:'+colors[d.group]+'">'+d.group+'</div>';
+if(d.metrics)Object.entries(d.metrics).forEach(function(e){h+='<div class="r"><span class="l">'+e[0]+'</span><span class="v" style="color:'+colors[d.group]+'">'+e[1]+'</span></div>';});
+tooltip.html(h).style("opacity",1).style("left",(event.pageX+14)+"px").style("top",(event.pageY-10)+"px");
+link.attr("stroke-opacity",function(l){return(l.source.id===d.id||l.target.id===d.id)?.8:.08});
+node.attr("opacity",function(n){if(n.id===d.id)return 1;var c=links.some(function(l){return(l.source.id===d.id&&l.target.id===n.id)||(l.target.id===d.id&&l.source.id===n.id)});return c?1:.15;});
+}).on("mousemove",function(event){tooltip.style("left",(event.pageX+14)+"px").style("top",(event.pageY-10)+"px");
+}).on("mouseout",function(){tooltip.style("opacity",0);link.attr("stroke-opacity",.3);node.attr("opacity",1);});
+
+sim.on("tick",function(){
+link.attr("x1",function(d){return d.source.x}).attr("y1",function(d){return d.source.y}).attr("x2",function(d){return d.target.x}).attr("y2",function(d){return d.target.y});
+node.attr("transform",function(d){return"translate("+d.x+","+d.y+")"});
+});
+
+function resetZoom(){svg.transition().duration(750).call(zoom.transform,d3.zoomIdentity)}
+function toggleLabels(){labelsOn=!labelsOn;labels.attr("opacity",labelsOn?.9:0)}
+function exportPNG(){
+var s=document.querySelector("svg"),d=new XMLSerializer().serializeToString(s),c=document.createElement("canvas");
+c.width=W*2;c.height=H*2;var x=c.getContext("2d");x.scale(2,2);x.fillStyle="#080c18";x.fillRect(0,0,W,H);
+var img=new Image(),b=new Blob([d],{type:"image/svg+xml;charset=utf-8"}),u=URL.createObjectURL(b);
+img.onload=function(){x.drawImage(img,0,0);URL.revokeObjectURL(u);var a=document.createElement("a");a.download="gambling_tam_mindmap.png";a.href=c.toDataURL("image/png");a.click()};
+img.src=u;
+}
+setTimeout(function(){
+var b=g.node().getBBox(),dx=b.width,dy=b.height,cx=b.x+dx/2,cy=b.y+dy/2;
+var s=.8/Math.max(dx/W,dy/H),t=[W/2-s*cx,H/2-s*cy];
+svg.transition().duration(1200).call(zoom.transform,d3.zoomIdentity.translate(t[0],t[1]).scale(s));
+},2500);
+</script>
+</body>
+</html>
