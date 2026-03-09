@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iGaming Universe Map — Crash Games & Aviator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg: #05060a;
+  --s1: #0d0f16;
+  --s2: #13151f;
+  --s3: #1a1d2b;
+  --border: #1f2335;
+  --border2: #2a2f45;
+  --c1: #00e5ff;   /* cyan — Aviator/Spribe */
+  --c2: #ff6b35;   /* orange — operators */
+  --c3: #7c3aed;   /* purple — platforms */
+  --c4: #22c55e;   /* green — affiliates */
+  --c5: #f59e0b;   /* gold — market */
+  --c6: #ec4899;   /* pink — live */
+  --c7: #64748b;   /* muted */
+  --text: #e2e8f0;
+  --dim: #64748b;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* animated starfield bg */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,229,255,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(124,58,237,0.04) 0%, transparent 50%),
+    linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 80px 80px, 80px 80px;
+  pointer-events:none; z-index:0;
+}
+
+.wrap { position:relative; z-index:1; max-width:1440px; margin:0 auto; padding:40px 24px 80px; }
+
+/* ── HEADER ── */
+.hdr { text-align:center; margin-bottom:64px; }
+.hdr-tag { font-size:10px; letter-spacing:5px; color:var(--c1); text-transform:uppercase; margin-bottom:16px; opacity:.6; }
+.hdr h1 {
+  font-family:'Syne',sans-serif; font-size:clamp(36px,5.5vw,72px); font-weight:800; line-height:.95;
+  background: linear-gradient(135deg,#fff 0%,var(--c1) 45%,var(--c2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin-bottom:16px;
+}
+.hdr p { color:var(--dim); font-size:12px; max-width:580px; margin:0 auto; line-height:1.7; }
+
+/* ── SECTION LABEL ── */
+.slabel {
+  font-family:'Syne',sans-serif; font-size:11px; font-weight:700; letter-spacing:4px;
+  text-transform:uppercase; color:var(--dim); margin-bottom:24px;
+  display:flex; align-items:center; gap:14px;
+}
+.slabel span { white-space:nowrap; }
+.slabel::after { content:''; flex:1; height:1px; background:var(--border); }
+
+section { margin-bottom:56px; }
+
+/* ══════════════════════════════════
+   UNIVERSE PYRAMID
+══════════════════════════════════ */
+.universe {
+  background:var(--s1); border:1px solid var(--border); border-radius:20px;
+  padding:40px; position:relative; overflow:hidden;
+}
+.universe-title {
+  font-family:'Syne',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px;
+  color:var(--c5); text-transform:uppercase; margin-bottom:32px; text-align:center;
+}
+
+.pyramid { display:flex; flex-direction:column; gap:0; }
+
+.pyr-row {
+  display:flex; justify-content:center; align-items:stretch;
+  position:relative; transition: transform .2s;
+}
+
+.pyr-band {
+  width:100%; border-radius:10px; padding:16px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; flex-wrap:wrap; margin-bottom:6px;
+  border: 1px solid transparent;
+  cursor:default; transition: border-color .3s, transform .2s;
+  position: relative;
+}
+.pyr-band:hover { transform: scale(1.01); }
+
+.pyr-band.l0 { background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.15); }
+.pyr-band.l1 { background:rgba(255,107,53,0.06); border-color:rgba(255,107,53,0.12); }
+.pyr-band.l2 { background:rgba(124,58,237,0.06); border-color:rgba(124,58,237,0.12); }
+.pyr-band.l3 { background:rgba(0,229,255,0.08); border-color:rgba(0,229,255,0.2); box-shadow: 0 0 40px rgba(0,229,255,0.06); }
+.pyr-band.l4 { background:rgba(34,197,94,0.06); border-color:rgba(34,197,94,0.12); }
+.pyr-band.l5 { background:rgba(100,116,139,0.05); border-color:rgba(100,116,139,0.1); }
+
+.band-left { display:flex; flex-direction:column; gap:4px; }
+.band-label {
+  font-family:'Syne',sans-serif; font-weight:700;
+  display:flex; align-items:center; gap:10px;
+}
+.band-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.l0 .band-dot { background:var(--c5); box-shadow:0 0 8px var(--c5); }
+.l1 .band-dot { background:var(--c2); box-shadow:0 0 8px var(--c2); }
+.l2 .band-dot { background:var(--c3); box-shadow:0 0 8px var(--c3); }
+.l3 .band-dot { background:var(--c1); box-shadow:0 0 12px var(--c1); }
+.l4 .band-dot { background:var(--c4); box-shadow:0 0 8px var(--c4); }
+.l5 .band-dot { background:var(--c7); }
+
+.band-name { font-size:15px; }
+.l0 .band-name { color:var(--c5); }
+.l1 .band-name { color:var(--c2); }
+.l2 .band-name { color:var(--c3); }
+.l3 .band-name { color:var(--c1); font-size:17px; }
+.l4 .band-name { color:var(--c4); }
+.l5 .band-name { color:var(--c7); }
+
+.band-sub { font-size:11px; color:var(--dim); line-height:1.5; padding-left:18px; }
+
+.band-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+.band-size {
+  font-family:'Syne',sans-serif; font-size:20px; font-weight:800; white-space:nowrap;
+}
+.l0 .band-size { color:var(--c5); }
+.l1 .band-size { color:var(--c2); }
+.l2 .band-size { color:var(--c3); }
+.l3 .band-size { color:var(--c1); font-size:24px; }
+.l4 .band-size { color:var(--c4); }
+.l5 .band-size { color:var(--c7); }
+
+.band-tags { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.btag {
+  font-size:9px; padding:2px 8px; border-radius:3px; letter-spacing:.5px;
+  text-transform:uppercase; white-space:nowrap;
+}
+
+/* ── YOU ARE HERE badge ── */
+.here-badge {
+  position:absolute; right:16px; top:50%; transform:translateY(-50%);
+  background:var(--c1); color:#000; font-size:9px; font-weight:700;
+  letter-spacing:2px; padding:4px 10px; border-radius:4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,229,255,.4)} 50%{opacity:.9;box-shadow:0 0 0 8px rgba(0,229,255,0)} }
+
+/* connector arrows */
+.pyr-connector {
+  display:flex; justify-content:center; align-items:center;
+  height:28px; position:relative; color:var(--dim); font-size:11px;
+  gap:8px;
+}
+.pyr-connector::before {
+  content:''; width:1px; height:100%;
+  background:linear-gradient(to bottom, var(--border), transparent);
+  position:absolute; left:50%; top:0;
+}
+.conn-label {
+  background:var(--bg); padding:0 8px; font-size:9px; letter-spacing:1px;
+  color:var(--dim); position:relative; z-index:1; text-transform:uppercase;
+}
+
+/* ══════════════════════════════════
+   STATS ROW
+══════════════════════════════════ */
+.stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+.stat { background:var(--s1); border:1px solid var(--border); border-radius:12px; padding:20px; position:relative; overflow:hidden; transition:transform .2s, border-color .2s; }
+.stat:hover { transform:translateY(-3px); }
+.stat::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+.stat.c1::before{background:var(--c1)} .stat.c2::before{background:var(--c2)} .stat.c3::before{background:var(--c3)} .stat.c4::before{background:var(--c4)} .stat.c5::before{background:var(--c5)} .stat.c6::before{background:var(--c6)}
+.stat-val { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; line-height:1; margin-bottom:5px; }
+.stat.c1 .stat-val{color:var(--c1)} .stat.c2 .stat-val{color:var(--c2)} .stat.c3 .stat-val{color:var(--c3)} .stat.c4 .stat-val{color:var(--c4)} .stat.c5 .stat-val{color:var(--c5)} .stat.c6 .stat-val{color:var(--c6)}
+.stat-lbl { font-size:9px; color:var(--dim); letter-spacing:1px; text-transform:uppercase; }
+
+/* ══════════════════════════════════
+   MIND MAP (SVG-based)
+══════════════════════════════════ */
+.mindmap-wrap {
+  background:var(--s1); border:1px solid var(--border); border-radius:20px;
+  padding:32px; overflow:auto;
+}
+.mindmap-wrap svg { display:block; margin:0 auto; max-width:100%; }
+
+/* ══════════════════════════════════
+   MONEY FLOW
+══════════════════════════════════ */
+.flow-wrap {
+  background:var(--s1); border:1px solid var(--border); border-radius:20px;
+  padding:36px;
+}
+
+.flow-chain {
+  display:flex; align-items:center; justify-content:center;
+  flex-wrap:wrap; gap:0;
+}
+
+.fnode {
+  background:var(--s2); border:2px solid var(--border2); border-radius:14px;
+  padding:18px 20px; text-align:center; min-width:140px;
+  transition:transform .2s, box-shadow .2s; cursor:default;
+}
+.fnode:hover { transform:translateY(-4px); }
+.fnode.op  { border-color:rgba(255,107,53,.4); box-shadow:0 0 24px rgba(255,107,53,.07); }
+.fnode.sp  { border-color:rgba(0,229,255,.5);  box-shadow:0 0 32px rgba(0,229,255,.1); }
+.fnode.af  { border-color:rgba(34,197,94,.4);  box-shadow:0 0 24px rgba(34,197,94,.07); }
+.fnode.pl  { border-color:rgba(124,58,237,.4); }
+.fnode.psp { border-color:rgba(245,158,11,.4); }
+.fnode.pl2 { border-color:rgba(100,116,139,.3); }
+
+.fi { font-size:28px; display:block; margin-bottom:6px; }
+.fn { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; margin-bottom:3px; }
+.fs { font-size:10px; color:var(--dim); line-height:1.4; }
+.fa {
+  display:inline-block; margin-top:7px; padding:2px 10px; border-radius:20px;
+  font-size:10px; font-weight:700;
+}
+.op .fa  { background:rgba(255,107,53,.15); color:var(--c2); }
+.sp .fa  { background:rgba(0,229,255,.15);  color:var(--c1); }
+.af .fa  { background:rgba(34,197,94,.15);  color:var(--c4); }
+.pl .fa  { background:rgba(124,58,237,.15); color:var(--c3); }
+.psp .fa { background:rgba(245,158,11,.15); color:var(--c5); }
+.pl2 .fa { background:rgba(100,116,139,.15);color:var(--c7); }
+
+.farrow {
+  display:flex; flex-direction:column; align-items:center;
+  padding:0 6px; min-width:70px;
+}
+.fa-lbl { font-size:9px; color:var(--c1); letter-spacing:.5px; text-align:center; margin-bottom:4px; white-space:nowrap; }
+.fa-line { width:100%; height:2px; background:linear-gradient(90deg,var(--c1),var(--c2)); position:relative; animation:faPulse 2.5s ease-in-out infinite; }
+.fa-line::after { content:'▶'; position:absolute; right:-8px; top:50%; transform:translateY(-50%); font-size:9px; color:var(--c2); }
+.fa-amt { font-size:9px; color:var(--c2); margin-top:4px; font-weight:700; white-space:nowrap; }
+@keyframes faPulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* second flow row */
+.flow-row2 {
+  margin-top:32px; padding-top:28px; border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0;
+}
+
+/* ══════════════════════════════════
+   REVENUE TABLE
+══════════════════════════════════ */
+.rtable-wrap {
+  background:var(--s1); border:1px solid var(--border); border-radius:16px;
+  overflow:hidden;
+}
+table { width:100%; border-collapse:collapse; }
+th { text-align:left; padding:12px 18px; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); border-bottom:1px solid var(--border); }
+td { padding:13px 18px; font-size:12px; border-bottom:1px solid rgba(31,35,53,.6); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--s2); }
+
+.mbadge { display:inline-block; padding:2px 9px; border-radius:3px; font-size:10px; font-weight:700; }
+.mb-in{background:rgba(245,158,11,.12);color:var(--c5)}
+.mb-row{background:rgba(0,229,255,.12);color:var(--c1)}
+.mb-asia{background:rgba(124,58,237,.12);color:var(--c3)}
+.mb-af{background:rgba(255,107,53,.12);color:var(--c2)}
+.mb-us{background:rgba(239,68,68,.12);color:#ef4444}
+.mb-latam{background:rgba(34,197,94,.12);color:var(--c4)}
+
+/* ══════════════════════════════════
+   PLAYERS GRID
+══════════════════════════════════ */
+.pgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+.pcard {
+  background:var(--s1); border:1px solid var(--border); border-radius:12px;
+  padding:22px; position:relative; transition:transform .2s, border-color .2s;
+  border-left-width: 3px;
+}
+.pcard:hover { transform:translateY(-3px); }
+.pcard.t1{border-left-color:var(--c1)} .pcard.t2{border-left-color:var(--c2)} .pcard.t3{border-left-color:var(--c4)} .pcard.t4{border-left-color:var(--c5)} .pcard.t5{border-left-color:var(--c3)}
+.pc-hdr { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.pc-name { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; }
+.pc-type { font-size:9px; padding:2px 8px; border-radius:3px; letter-spacing:1px; text-transform:uppercase; }
+.t1 .pc-type{background:rgba(0,229,255,.1);color:var(--c1)} .t2 .pc-type{background:rgba(255,107,53,.1);color:var(--c2)} .t3 .pc-type{background:rgba(34,197,94,.1);color:var(--c4)} .t4 .pc-type{background:rgba(245,158,11,.1);color:var(--c5)} .t5 .pc-type{background:rgba(124,58,237,.1);color:var(--c3)}
+.pc-desc { font-size:11px; color:var(--dim); line-height:1.6; margin-bottom:12px; }
+.pc-metrics { display:flex; gap:16px; flex-wrap:wrap; }
+.pm-val { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; }
+.t1 .pm-val{color:var(--c1)} .t2 .pm-val{color:var(--c2)} .t3 .pm-val{color:var(--c4)} .t4 .pm-val{color:var(--c5)} .t5 .pm-val{color:var(--c3)}
+.pm-key { font-size:9px; color:var(--dim); letter-spacing:.5px; text-transform:uppercase; }
+
+/* ══════════════════════════════════
+   SHARE BARS
+══════════════════════════════════ */
+.share-wrap { background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:32px; }
+.sbar-row { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.sbar-name { width:110px; font-family:'Syne',sans-serif; font-size:12px; font-weight:700; flex-shrink:0; }
+.sbar-track { flex:1; height:26px; background:var(--s2); border-radius:4px; overflow:hidden; }
+.sbar-fill { height:100%; display:flex; align-items:center; padding:0 12px; font-size:10px; font-weight:700; border-radius:4px; }
+.sbar-pct { width:45px; text-align:right; font-family:'Syne',sans-serif; font-size:13px; font-weight:800; flex-shrink:0; }
+
+/* ══════════════════════════════════
+   PROMPT BLOCK
+══════════════════════════════════ */
+.prompt-block {
+  background:#070910; border:1px solid var(--c1); border-radius:14px;
+  padding:32px; position:relative;
+}
+.prompt-block::before {
+  content:'$ claude code'; position:absolute; top:14px; right:18px;
+  font-size:10px; color:var(--c1); opacity:.4; letter-spacing:2px;
+}
+.prompt-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--c1); margin-bottom:18px; letter-spacing:2px; text-transform:uppercase; }
+.prompt-text { font-size:11.5px; line-height:1.9; color:#94a3b8; white-space:pre-wrap; }
+.pk{color:var(--c1)} .pv{color:var(--c2)} .ps{color:var(--c4)} .pc{color:var(--c5)}
+
+/* ── INSIGHTS ── */
+.qgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+.qcard { background:var(--s1); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+.qtext { font-size:12px; line-height:1.7; color:var(--text); border-left:2px solid var(--c1); padding-left:14px; }
+.qctx { font-size:9px; color:var(--dim); margin-top:10px; letter-spacing:1px; }
+
+footer { text-align:center; padding:32px 0 16px; color:var(--dim); font-size:10px; border-top:1px solid var(--border); margin-top:24px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+section { animation:fadeUp .5s ease both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-tag">iGaming Universe · Market Intelligence 2024–2025</div>
+  <h1>Где Crash-игры<br>в мире гейминга</h1>
+  <p>Полная карта вселенной: от глобального Gaming до ниши Aviator.<br>На основе интервью с Дэвидом Лоладзе, CEO Spribe.</p>
+</header>
+
+<!-- ══════════ UNIVERSE HIERARCHY ══════════ -->
+<section>
+  <div class="slabel"><span>Уровень 1 · Вселенная гейминга</span></div>
+
+  <div class="universe">
+    <div class="universe-title">📡 GAMING UNIVERSE — от большого к малому</div>
+    <div class="pyramid">
+
+      <!-- L0: Global Gaming -->
+      <div class="pyr-band l0">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">🌍 GLOBAL GAMING</span></div>
+          <div class="band-sub">Video Games · Mobile Games · PC/Console · Cloud Gaming · Esports · Gambling<br>Все форматы: платные игры, F2P, подписки, токены, реальные деньги</div>
+        </div>
+        <div class="band-right">
+          <div class="band-size">$455 млрд</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(245,158,11,.1);color:var(--c5)">TAM 2024</span>
+            <span class="btag" style="background:rgba(245,158,11,.1);color:var(--c5)">3.2B игроков</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyr-connector"><span class="conn-label">сегмент с реальными ставками</span></div>
+
+      <!-- L1: Gambling -->
+      <div class="pyr-band l1">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">🎲 GAMBLING (Online + Offline)</span></div>
+          <div class="band-sub">Casino · Sports Betting · Poker · Lottery · Bingo · Fantasy Sports<br>Оффлайн-казино (Лас-Вегас, Макао) + весь онлайн-рынок</div>
+        </div>
+        <div class="band-right">
+          <div class="band-size">$674 млрд</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(255,107,53,.1);color:var(--c2)">Global 2023</span>
+            <span class="btag" style="background:rgba(255,107,53,.1);color:var(--c2)">Online: $100B</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyr-connector"><span class="conn-label">онлайн-сегмент</span></div>
+
+      <!-- L2: Online iGaming -->
+      <div class="pyr-band l2">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">💻 ONLINE iGAMING</span></div>
+          <div class="band-sub">
+            Slots (крупнейший сегмент) · Live Casino (Evolution) · Sports Betting · Poker online<br>
+            <strong style="color:var(--c3)">Crash / Multiplier Games</strong> · Virtual Sports · Bingo online
+          </div>
+        </div>
+        <div class="band-right">
+          <div class="band-size">~$100 млрд</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(124,58,237,.1);color:var(--c3)">GGR 2024</span>
+            <span class="btag" style="background:rgba(124,58,237,.1);color:var(--c3)">CAGR +11%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyr-connector"><span class="conn-label">быстрорастущий жанр</span></div>
+
+      <!-- L3: Crash / Multiplier — HIGHLIGHT -->
+      <div class="pyr-band l3" style="position:relative;">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">✈️ CRASH / MULTIPLIER GAMES</span></div>
+          <div class="band-sub">
+            Мультиплеерные игры с нарастающим коэффициентом · Авиатор, JetX, Spaceman, Balloon<br>
+            Сместили ~40% GGR слотов · 60M игроков / мес · Wager $14B / мес<br>
+            <strong style="color:var(--c1)">Жанр изобретён Bustabit (open source), масштабирован Spribe/Aviator</strong>
+          </div>
+        </div>
+        <div class="band-right" style="padding-right:100px;">
+          <div class="band-size">~$6–8 млрд</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(0,229,255,.1);color:var(--c1)">GGR / год</span>
+            <span class="btag" style="background:rgba(0,229,255,.1);color:var(--c1)">~6–8% от iGaming</span>
+          </div>
+        </div>
+        <div class="here-badge">← ВЫ ЗДЕСЬ</div>
+      </div>
+
+      <div class="pyr-connector"><span class="conn-label">доминирующий игрок</span></div>
+
+      <!-- L4: Spribe / Aviator -->
+      <div class="pyr-band l4">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">🚀 SPRIBE · AVIATOR</span></div>
+          <div class="band-sub">
+            92%+ рынка Crash-игр · Unicorn $2B+ · 5 000 казино-клиентов · 350 человек<br>
+            Модель: 7–9% GGR операторов · Маркетинг $50M+/год (UFC, АС Милан, Cricket)<br>
+            Выручка ~$500M+/год · Основан в Киеве 2018
+          </div>
+        </div>
+        <div class="band-right">
+          <div class="band-size">$500M+</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(34,197,94,.1);color:var(--c4)">Revenue / год</span>
+            <span class="btag" style="background:rgba(34,197,94,.1);color:var(--c4)">92% доля</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyr-connector"><span class="conn-label">для сравнения — смежный сегмент</span></div>
+
+      <!-- L5: Benchmarks -->
+      <div class="pyr-band l5">
+        <div class="band-left">
+          <div class="band-label"><span class="band-dot"></span><span class="band-name">📊 БЕНЧМАРК: Live Casino (Evolution Gaming)</span></div>
+          <div class="band-sub">Крупнейший конкурент по влиянию в iGaming. Публичная компания. Аналогичная B2B модель — роялти от GGR.</div>
+        </div>
+        <div class="band-right">
+          <div class="band-size">€1.8 млрд</div>
+          <div class="band-tags">
+            <span class="btag" style="background:rgba(100,116,139,.1);color:var(--c7)">Revenue 2023</span>
+            <span class="btag" style="background:rgba(100,116,139,.1);color:var(--c7)">MCap ~€20B</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Context bar -->
+    <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Slots доля iGaming GGR</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--c3)">~40%</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Live Casino доля</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--c6)">~25%</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Sports Betting</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--c2)">~30%</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Crash/Multiplier</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--c1)">~6–8% → растёт</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Aviator в Crash</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--c1)">92%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MIND MAP ══════════ -->
+<section>
+  <div class="slabel"><span>Уровень 2 · Mind Map экосистемы</span></div>
+  <div class="mindmap-wrap">
+    <svg viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:780px;">
+      <defs>
+        <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(0,229,255,0.15)"/>
+          <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
+        </radialGradient>
+        <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,107,53,0.1)"/>
+          <stop offset="100%" stop-color="rgba(255,107,53,0)"/>
+        </radialGradient>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <polygon points="0,0 6,3 0,6" fill="rgba(0,229,255,0.5)"/>
+        </marker>
+        <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <polygon points="0,0 6,3 0,6" fill="rgba(255,107,53,0.5)"/>
+        </marker>
+        <filter id="blur1">
+          <feGaussianBlur stdDeviation="8"/>
+        </filter>
+      </defs>
+
+      <!-- background glow -->
+      <ellipse cx="600" cy="390" rx="180" ry="180" fill="url(#glow1)" filter="url(#blur1)"/>
+
+      <!-- ── LINES ── -->
+      <!-- Center to operators -->
+      <line x1="600" y1="390" x2="210" y2="200" stroke="rgba(255,107,53,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+      <line x1="600" y1="390" x2="210" y2="390" stroke="rgba(255,107,53,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+      <line x1="600" y1="390" x2="210" y2="580" stroke="rgba(255,107,53,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+
+      <!-- Center to providers -->
+      <line x1="600" y1="390" x2="990" y2="200" stroke="rgba(124,58,237,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <line x1="600" y1="390" x2="990" y2="390" stroke="rgba(124,58,237,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- Center to affiliates -->
+      <line x1="600" y1="390" x2="420" y2="660" stroke="rgba(34,197,94,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <line x1="600" y1="390" x2="600" y2="660" stroke="rgba(34,197,94,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      <line x1="600" y1="390" x2="780" y2="660" stroke="rgba(34,197,94,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- Center to marketing -->
+      <line x1="600" y1="390" x2="600" y2="90" stroke="rgba(245,158,11,0.3)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- Center to players -->
+      <line x1="600" y1="390" x2="990" y2="580" stroke="rgba(100,116,139,0.25)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- Operator children -->
+      <line x1="210" y1="200" x2="60" y2="140" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="210" y1="200" x2="60" y2="200" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="210" y1="200" x2="60" y2="260" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <!-- ── CENTER NODE: SPRIBE/AVIATOR ── -->
+      <circle cx="600" cy="390" r="78" fill="rgba(0,229,255,0.06)" stroke="rgba(0,229,255,0.4)" stroke-width="2"/>
+      <circle cx="600" cy="390" r="60" fill="rgba(13,15,22,0.95)"/>
+      <text x="600" y="380" text-anchor="middle" font-family="Syne,sans-serif" font-size="15" font-weight="800" fill="#00e5ff">✈️ SPRIBE</text>
+      <text x="600" y="398" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#00e5ff">AVIATOR</text>
+      <text x="600" y="414" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="rgba(0,229,255,0.6)">92% Crash Market</text>
+
+      <!-- ── OPERATORS (LEFT) ── -->
+      <!-- Big Operator -->
+      <rect x="110" y="158" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(255,107,53,0.4)" stroke-width="1.5"/>
+      <text x="210" y="179" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#ff6b35">🏦 Крупный оператор</text>
+      <text x="210" y="197" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Hollywood Bets, Cosmic, 1xBet</text>
+      <text x="210" y="213" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#ff6b35">GGR $10–20M/мес</text>
+      <text x="210" y="229" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">платит Spribe $1M+/мес</text>
+
+      <!-- Medium Operator -->
+      <rect x="110" y="348" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(255,107,53,0.3)" stroke-width="1.5"/>
+      <text x="210" y="369" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#ff6b35">🎰 Средний оператор</text>
+      <text x="210" y="387" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Типичное онлайн-казино</text>
+      <text x="210" y="403" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#ff6b35">GGR $1–5M/мес</text>
+      <text x="210" y="419" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">платит $70–450K/мес</text>
+
+      <!-- Small Operator -->
+      <rect x="110" y="538" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(255,107,53,0.25)" stroke-width="1.5"/>
+      <text x="210" y="559" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#ff6b35">⚡ Агрегатор (PAM)</text>
+      <text x="210" y="577" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">500+ казино внутри</text>
+      <text x="210" y="593" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#ff6b35">GGR $20M+/мес →Spribe</text>
+      <text x="210" y="609" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">EveryMatrix, SoftSwiss</text>
+
+      <!-- Operator children (small labels) -->
+      <rect x="0" y="116" width="115" height="48" rx="6" fill="rgba(13,15,22,0.9)" stroke="rgba(255,107,53,0.2)" stroke-width="1"/>
+      <text x="57" y="135" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Космолот</text>
+      <text x="57" y="153" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="rgba(255,107,53,0.7)">первый нет</text>
+
+      <rect x="0" y="174" width="115" height="48" rx="6" fill="rgba(13,15,22,0.9)" stroke="rgba(255,107,53,0.2)" stroke-width="1"/>
+      <text x="57" y="193" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Hollywood PS</text>
+      <text x="57" y="211" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="rgba(255,107,53,0.7)">ЮАР лидер</text>
+
+      <rect x="0" y="232" width="115" height="48" rx="6" fill="rgba(13,15,22,0.9)" stroke="rgba(255,107,53,0.2)" stroke-width="1"/>
+      <text x="57" y="251" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Draft Kings</text>
+      <text x="57" y="269" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="rgba(255,107,53,0.7)">США (заблок.)</text>
+
+      <!-- ── GAME PROVIDERS / COMPETITORS (RIGHT TOP) ── -->
+      <rect x="890" y="158" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(124,58,237,0.4)" stroke-width="1.5"/>
+      <text x="990" y="179" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">🚀 SmartSoft / JetX</text>
+      <text x="990" y="197" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Грузия · Конкурент #2</text>
+      <text x="990" y="213" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#7c3aed">3–5% Crash рынка</text>
+      <text x="990" y="229" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">цена от 2% GGR</text>
+
+      <!-- Platforms -->
+      <rect x="890" y="348" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(124,58,237,0.35)" stroke-width="1.5"/>
+      <text x="990" y="369" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">⚙️ PAM-платформы</text>
+      <text x="990" y="387" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">EveryMatrix · SoftSwiss</text>
+      <text x="990" y="403" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#7c3aed">BetConstruct · GR8 Tech</text>
+      <text x="990" y="419" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">лицензируют контент</text>
+
+      <!-- ── MARKETING (TOP CENTER) ── -->
+      <rect x="460" y="24" width="280" height="76" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+      <text x="600" y="46" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#f59e0b">📢 Маркетинг Spribe</text>
+      <text x="600" y="63" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">UFC ($40M/3yr) · AC Milan · Cricket · WWE</text>
+      <text x="600" y="79" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#f59e0b">$50M+/год · амбассадоры UFC</text>
+      <text x="600" y="93" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Formula 1 (скоро?) · выставки ICE/SBC</text>
+
+      <!-- ── AFFILIATES (BOTTOM) ── -->
+      <rect x="320" y="624" width="180" height="68" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(34,197,94,0.35)" stroke-width="1.5"/>
+      <text x="410" y="645" text-anchor="middle" font-family="Syne,sans-serif" font-size="11" font-weight="700" fill="#22c55e">🔗 Gypsy Partners</text>
+      <text x="410" y="661" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Tier-1 · Динамо Киев</text>
+      <text x="410" y="677" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#22c55e">CPA / RevShare</text>
+
+      <rect x="510" y="624" width="180" height="68" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(34,197,94,0.3)" stroke-width="1.5"/>
+      <text x="600" y="645" text-anchor="middle" font-family="Syne,sans-serif" font-size="11" font-weight="700" fill="#22c55e">🌐 AFFPRO</text>
+      <text x="600" y="661" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">2000+ офферов · 100 стран</text>
+      <text x="600" y="677" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#22c55e">CPA/CPL/RS/гибрид</text>
+
+      <rect x="700" y="624" width="180" height="68" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(34,197,94,0.25)" stroke-width="1.5"/>
+      <text x="790" y="645" text-anchor="middle" font-family="Syne,sans-serif" font-size="11" font-weight="700" fill="#22c55e">📺 Стримеры</text>
+      <text x="790" y="661" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">YouTube · Twitch</text>
+      <text x="790" y="677" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#22c55e">через операторов</text>
+
+      <!-- ── PLAYERS (RIGHT BOTTOM) ── -->
+      <rect x="890" y="538" width="200" height="84" rx="10" fill="rgba(13,15,22,0.95)" stroke="rgba(100,116,139,0.3)" stroke-width="1.5"/>
+      <text x="990" y="559" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="700" fill="#94a3b8">👥 Игроки</text>
+      <text x="990" y="577" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">60M активных / мес</text>
+      <text x="990" y="593" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">400K ставок / мин</text>
+      <text x="990" y="609" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#64748b">Индия, Африка, LatAm</text>
+
+      <!-- ── FLOW LABELS on lines ── -->
+      <rect x="340" y="270" width="80" height="18" rx="4" fill="rgba(5,6,10,0.9)"/>
+      <text x="380" y="283" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="rgba(255,107,53,0.7)">7–9% GGR</text>
+
+      <rect x="740" y="270" width="90" height="18" rx="4" fill="rgba(5,6,10,0.9)"/>
+      <text x="785" y="283" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="rgba(124,58,237,0.7)">лицензия</text>
+
+      <rect x="540" y="490" width="110" height="18" rx="4" fill="rgba(5,6,10,0.9)"/>
+      <text x="595" y="503" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="rgba(34,197,94,0.7)">трафик → казино</text>
+
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════ KEY METRICS ══════════ -->
+<section>
+  <div class="slabel"><span>Уровень 3 · Ключевые метрики</span></div>
+  <div class="stats-row">
+    <div class="stat c5"><div class="stat-val">$455B</div><div class="stat-lbl">Global Gaming TAM</div></div>
+    <div class="stat c2"><div class="stat-val">$100B</div><div class="stat-lbl">Online iGaming GGR</div></div>
+    <div class="stat c1"><div class="stat-val">~$7B</div><div class="stat-lbl">Crash / Multiplier GGR</div></div>
+    <div class="stat c1"><div class="stat-val">92%</div><div class="stat-lbl">Aviator доля в Crash</div></div>
+    <div class="stat c4"><div class="stat-val">60M</div><div class="stat-lbl">Игроков / месяц</div></div>
+    <div class="stat c3"><div class="stat-val">$2B+</div><div class="stat-lbl">Оценка Spribe</div></div>
+  </div>
+</section>
+
+<!-- ══════════ MONEY FLOW ══════════ -->
+<section>
+  <div class="slabel"><span>Уровень 4 · Денежные потоки</span></div>
+  <div class="flow-wrap">
+    <!-- PRIMARY CHAIN -->
+    <div style="font-size:10px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">► Основная цепочка</div>
+    <div class="flow-chain">
+      <div class="fnode pl2">
+        <span class="fi">👤</span>
+        <div class="fn">Игрок</div>
+        <div class="fs">60M / месяц<br>400K ставок/мин</div>
+        <span class="fa">Вносит деньги</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">СТАВКА</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">100% stake</div>
+      </div>
+      <div class="fnode op">
+        <span class="fi">🏦</span>
+        <div class="fn">Оператор</div>
+        <div class="fs">5 000 казино<br>GGR $550M/мес</div>
+        <span class="fa">Удерживает 91%+</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">РОЯЛТИ</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">7–9% GGR</div>
+      </div>
+      <div class="fnode sp">
+        <span class="fi">✈️</span>
+        <div class="fn">SPRIBE</div>
+        <div class="fs">~$40–50M/мес<br>$500M+/год</div>
+        <span class="fa">~$42M avg/мес</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">МАРКЕТИНГ</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">$50M+/год</div>
+      </div>
+      <div class="fnode psp" style="min-width:130px">
+        <span class="fi">📢</span>
+        <div class="fn">Бренд</div>
+        <div class="fs">UFC · Милан<br>Cricket · F1</div>
+        <span class="fa">Awareness → GGR ↑</span>
+      </div>
+    </div>
+
+    <!-- SECONDARY CHAIN -->
+    <div class="flow-row2">
+      <div style="font-size:10px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;width:100%;margin-bottom:14px;">► Трафик & инфраструктура</div>
+      <div class="fnode af" style="min-width:130px">
+        <span class="fi">🔗</span>
+        <div class="fn">Аффилиат</div>
+        <div class="fs">Gypsy, AFFPRO<br>стримеры</div>
+        <span class="fa">Трафик</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">CPA/REVSHARE</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">20–40% GGR</div>
+      </div>
+      <div class="fnode op" style="min-width:130px">
+        <span class="fi">🎰</span>
+        <div class="fn">Оператор</div>
+        <div class="fs">Платит за<br>привлечение</div>
+        <span class="fa">New players</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">ЛИЦЕНЗИЯ PAM</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">SaaS monthly</div>
+      </div>
+      <div class="fnode pl" style="min-width:130px">
+        <span class="fi">⚙️</span>
+        <div class="fn">PAM-платформа</div>
+        <div class="fs">EveryMatrix<br>SoftSwiss и др.</div>
+        <span class="fa">$5–50K+/мес</span>
+      </div>
+      <div class="farrow">
+        <div class="fa-lbl">PSP КОМИССИЯ</div>
+        <div class="fa-line"></div>
+        <div class="fa-amt">2–5% от dep.</div>
+      </div>
+      <div class="fnode psp" style="min-width:130px">
+        <span class="fi">💳</span>
+        <div class="fn">PSP / Платежи</div>
+        <div class="fs">Pay Admit<br>NUVEI, Trustly</div>
+        <span class="fa">Processing fee</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ REVENUE BY MARKET ══════════ -->
+<section>
+  <div class="slabel"><span>Ставки по рынкам · Spribe</span></div>
+  <div class="rtable-wrap">
+    <table>
+      <thead>
+        <tr><th>Регион</th><th>Ставка</th><th>Тренд</th><th>Статус</th><th>Комментарий</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mbadge mb-in">🇮🇳 Индия</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--c5)">7%</td>
+          <td style="color:var(--c4)">↑ с 5% (+40%)</td>
+          <td style="color:var(--c4)">🚀 Крупнейший рынок</td>
+          <td style="color:var(--dim);font-size:10px">Cricket, AC Milan, WWE. Рост среднего класса. Регуляторные проблемы временные.</td>
+        </tr>
+        <tr>
+          <td><span class="mbadge mb-af">🌍 Африка</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--c2)">9%</td>
+          <td style="color:var(--c4)">🔥 Быстро растёт</td>
+          <td style="color:var(--c4)">★ Топ-приоритет</td>
+          <td style="color:var(--dim);font-size:10px">ЮАР отдельная лига. Нигерия, Кения. Главный растущий регион по словам CEO.</td>
+        </tr>
+        <tr>
+          <td><span class="mbadge mb-latam">🌎 LatAm / Бразилия</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--c4)">9%</td>
+          <td style="color:var(--c4)">↑ Регуляция 2025</td>
+          <td style="color:var(--c4)">Позитив</td>
+          <td style="color:var(--dim);font-size:10px">Баг стоил $13M евро за неделю в Бразилии. Но рынок большой и растёт.</td>
+        </tr>
+        <tr>
+          <td><span class="mbadge mb-row">🌍 Rest of World (EU+)</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--c1)">9%</td>
+          <td style="color:var(--dim)">→ Зрелый</td>
+          <td style="color:var(--dim)">Стабильно</td>
+          <td style="color:var(--dim);font-size:10px">Германия — пример провала регуляции. Игроки уходят в Stake через VPN.</td>
+        </tr>
+        <tr>
+          <td><span class="mbadge mb-asia">🌏 Азия / Китай</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--c3)">5%</td>
+          <td style="color:var(--dim)">→ Слабый</td>
+          <td style="color:var(--c3)">⏳ Потенциал</td>
+          <td style="color:var(--dim);font-size:10px">Не любят Crash. Баккара, специфические слоты. Если откроется — огромный рынок.</td>
+        </tr>
+        <tr>
+          <td><span class="mbadge mb-us">🇺🇸 США</span></td>
+          <td style="font-family:'Syne',sans-serif;font-weight:700;color:#ef4444">—</td>
+          <td style="color:#ef4444">⚠️ Заблокирован</td>
+          <td style="color:#ef4444">3 года борьбы</td>
+          <td style="color:var(--dim);font-size:10px">Лицензия NJ. Temporary Admission есть. Главная ошибка CEO — неверные юристы.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════ MARKET SHARE ══════════ -->
+<section>
+  <div class="slabel"><span>Доли рынка Crash-игр</span></div>
+  <div class="share-wrap">
+    <div class="sbar-row">
+      <div class="sbar-name" style="color:var(--c1)">✈️ Aviator</div>
+      <div class="sbar-track">
+        <div class="sbar-fill" style="width:92%;background:linear-gradient(90deg,rgba(0,229,255,0.5),rgba(0,229,255,0.2));color:#fff;">SPRIBE · Грузия 🇬🇪</div>
+      </div>
+      <div class="sbar-pct" style="color:var(--c1)">92%</div>
+    </div>
+    <div class="sbar-row">
+      <div class="sbar-name" style="color:var(--c4)">🚀 JetX</div>
+      <div class="sbar-track">
+        <div class="sbar-fill" style="width:5%;background:rgba(34,197,94,0.4);color:#fff;font-size:9px;">SmartSoft 🇬🇪</div>
+      </div>
+      <div class="sbar-pct" style="color:var(--c4)">~5%</div>
+    </div>
+    <div class="sbar-row">
+      <div class="sbar-name" style="color:var(--dim)">🛸 Другие</div>
+      <div class="sbar-track">
+        <div class="sbar-fill" style="width:3%;background:rgba(100,116,139,0.3);color:#94a3b8;font-size:9px;">Aviatrix…</div>
+      </div>
+      <div class="sbar-pct" style="color:var(--dim)">~3%</div>
+    </div>
+    <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;">
+      <div><div class="pm-key">Wager / мес</div><div class="pm-val" style="color:var(--c1)">$14 млрд</div></div>
+      <div><div class="pm-key">GGR / год</div><div class="pm-val" style="color:var(--c1)">~$6–8 млрд</div></div>
+      <div><div class="pm-key">Aviator в слотах</div><div class="pm-val" style="color:var(--c2)">20–40%</div></div>
+      <div><div class="pm-key">Оценка Spribe</div><div class="pm-val" style="color:var(--c4)">$2B+</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ KEY INSIGHTS ══════════ -->
+<section>
+  <div class="slabel"><span>Ключевые инсайты</span></div>
+  <div class="qgrid">
+    <div class="qcard">
+      <div class="qtext">Crash-игры — это ~6–8% от $100B рынка iGaming. Но по скорости роста и user acquisition они заменяют слоты: в ряде рынков забирают 20–40% GGR.</div>
+      <div class="qctx">— Позиция в экосистеме</div>
+    </div>
+    <div class="qcard">
+      <div class="qtext">Aviator — это не казино. Это B2B инструмент привлечения новых игроков, которые никогда не играли в казино. Лучший и дешевейший acquisition channel в iGaming.</div>
+      <div class="qctx">— CEO Spribe о ключевой ценности</div>
+    </div>
+    <div class="qcard">
+      <div class="qtext">92% рынка одного жанра при выручке $500M+ в год — это не продукт, это инфраструктура. Казино без Aviator теряют игроков мгновенно.</div>
+      <div class="qctx">— О монопольной позиции</div>
+    </div>
+    <div class="qcard">
+      <div class="qtext">Evolution Gaming (бенчмарк): $1.8B выручка, MCap ~€20B. Spribe при $500M выручке и Unicorn-оценке $2B — потенциально недооценён. P/S = 4x vs Evolution ~10x.</div>
+      <div class="qctx">— Финансовый бенчмарк</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CLAUDE CODE PROMPT ══════════ -->
+<section>
+  <div class="slabel"><span>Промпт для Claude Code · Глубокий ресёрч + Mind Map</span></div>
+  <div class="prompt-block">
+    <div class="prompt-title">▶ Claude Code Research Prompt v2 — iGaming Universe Analysis</div>
+    <div class="prompt-text"><span class="pk">ЗАДАЧА:</span> <span class="ps">Выполни глубокий исследовательский анализ рынка iGaming.
+Построй интерактивную Mind Map экосистемы и финансовую модель.
+Фокус: место Crash-игр во вселенной гейминга + экосистема Spribe/Aviator.</span>
+
+<span class="pk">═══ БЛОК 1: ВСЕЛЕННАЯ ГЕЙМИНГА (сверху вниз) ═══</span>
+
+<span class="ps">1.1 GLOBAL GAMING TAM</span>
+   <span class="pv">- Найди актуальный размер рынка: Video Games, Mobile, PC/Console,
+     Cloud Gaming, Esports, Gambling (все форматы)
+   - Источники: Newzoo, Statista, Sensor Tower 2024
+   - Построй таблицу: сегмент → размер → CAGR → топ-игроки</span>
+
+<span class="ps">1.2 GAMBLING UNIVERSE</span>
+   <span class="pv">- Offline (Macau, Las Vegas, локальные) vs Online
+   - Online разбивка: Sports Betting / Casino / Poker / Lottery
+   - Casino разбивка: Slots / Live Casino / Crash / Virtual Sports / Bingo
+   - Доли каждого сегмента в % от GGR</span>
+
+<span class="ps">1.3 CRASH / MULTIPLIER SEGMENT</span>
+   <span class="pv">- Оцени реальный размер: GGR, Wager, CAGR
+   - История жанра: Bustabit (open source) → Aviator (2019) → boom
+   - Почему Crash вытесняет Slots? (psychological mechanics, acquisition)
+   - Прогноз доли Crash в iGaming к 2027</span>
+
+<span class="pk">═══ БЛОК 2: КОНКУРЕНТНЫЙ АНАЛИЗ ═══</span>
+
+<span class="ps">2.1 ПРОВАЙДЕРЫ CRASH-ИГР</span>
+   <span class="pv">Для каждого найди: год запуска, страна, доля рынка, цена (% GGR),
+   ключевые рынки, отличия продукта:
+   - Spribe / Aviator (Грузия, ~92%)
+   - SmartSoft / JetX (Грузия, ~3-5%)
+   - Aviatrix (Мальта)
+   - BGaming / Crash игры
+   - Evoplay / Turbo Games
+   - Pragmatic Play / Spaceman
+   - Draft Kings (США, собственная)</span>
+
+<span class="ps">2.2 СМЕЖНЫЕ КОНКУРЕНТЫ (по влиянию)</span>
+   <span class="pv">- Evolution Gaming: Live Casino, $1.8B revenue, €20B MCap
+   - Pragmatic Play: Slots + Live, частная
+   - Play'n GO, NetEnt/Red Tiger (Light & Wonder)
+   - Построй матрицу: Revenue × Market Cap × Business Model</span>
+
+<span class="pk">═══ БЛОК 3: ECOSYSTEM MAPPING ═══</span>
+
+<span class="ps">3.1 ПОЛНЫЙ ГРАФ ИГРОКОВ</span>
+   <span class="pv">Найди данные и составь список для каждого слоя:
+   
+   LAYER 1 — PLAYERS: демография, география, LTV по рынкам
+   LAYER 2 — OPERATORS: ТОП-20 по GGR (публичные + оценки)
+     Hollywood Bets, Bet365, 888, LeoVegas, Stake, 1xBet и др.
+   LAYER 3 — PAM PLATFORMS: EveryMatrix, SoftSwiss, BetConstruct,
+     GR8 Tech, Digitain, Softgamings — доли рынка, клиенты
+   LAYER 4 — GAME PROVIDERS: Spribe, Evolution, Pragmatic, NetEnt
+   LAYER 5 — PAYMENTS (PSP): Trustly, Skrill, NUVEI, Pay Admit,
+     MuchBetter — объёмы, комиссии
+   LAYER 6 — AFFILIATES: Income Access, Catena Media, Kindred,
+     Gypsy Partners, AFFPRO — трафик, модели оплаты
+   LAYER 7 — REGULATORS: MGA (Мальта), UKGC, Curaçao, Anjouan</span>
+
+<span class="pk">═══ БЛОК 4: ФИНАНСОВАЯ МОДЕЛЬ ═══</span>
+
+<span class="ps">4.1 SPRIBE UNIT ECONOMICS</span>
+   <span class="pv">Построй модель на основе данных из интервью:
+   - Wager $14B/мес → GGR (RTP ~97%) → ~$420M GGR/мес операторов
+     (проверь: CEO говорит $500-550M → объясни разницу)
+   - Spribe берёт avg 8% → Revenue ~$40-44M/мес
+   - Annualized Revenue: $480-528M/год
+   - Расходы: маркетинг $50M, команда 350 чел, инфра
+   - Оценка EBITDA margin, сравни с Evolution (55%+ margin)</span>
+
+<span class="ps">4.2 МУЛЬТИПЛИКАТОРЫ И ОЦЕНКА</span>
+   <span class="pv">- Evolution: P/S ~10x, EV/EBITDA ~18x
+   - При Revenue $500M и оценке $2B → P/S = 4x (дисконт к Evolution)
+   - Обоснован ли дисконт? (частная, iGaming регуляция, концентрация)
+   - Сценарии IPO: какой мультипликатор даст $5B, $10B оценку?</span>
+
+<span class="pk">═══ БЛОК 5: ВИЗУАЛИЗАЦИЯ — MIND MAP ═══</span>
+
+<span class="ps">СОЗДАЙ ИНТЕРАКТИВНУЮ MIND MAP в HTML/JS:</span>
+<span class="pv">
+Используй D3.js или vis.js для force-directed graph.
+Узлы и связи:
+
+ЦЕНТР: Spribe/Aviator (большой узел, cyan)
+
+КЛАСТЕР 1 — OPERATORS (orange):
+  EveryMatrix (первый клиент, вечный контракт)
+  Hollywood Bets, Космолот, 1xBet, Stake, Bet365
+  PAM-платформы как sub-nodes
+
+КЛАСТЕР 2 — COMPETITORS (purple):
+  SmartSoft/JetX, Aviatrix, Spaceman (Pragmatic)
+  Bustabit (исток жанра, пунктир)
+
+КЛАСТЕР 3 — MARKETING (gold):
+  UFC (40M/3yr), AC Milan, Cricket leagues
+  WWE, Formula 1 (скоро), ICE/SBC выставки
+
+КЛАСТЕР 4 — AFFILIATES (green):
+  Gypsy Partners, AFFPRO, стримеры YouTube/Twitch
+
+КЛАСТЕР 5 — MARKETS (blue gradient):
+  🇮🇳 Индия (largest, 7%), 🌍 Африка (fastest),
+  🌎 LatAm (growing), 🌍 EU/ROW (9%), 🇺🇸 США (blocked)
+
+КЛАСТЕР 6 — BENCHMARKS (gray):
+  Evolution Gaming ($1.8B rev, €20B MCap)
+
+Требования к карте:
+- Клик по узлу → показывает tooltip с метриками
+- Цвет ребра = тип связи (деньги/контент/трафик/конкуренция)
+- Размер узла = относительный размер/влияние
+- Тёмная тема, анимированные связи
+- Экспорт в PNG кнопкой
+- Легенда с типами связей</span>
+
+<span class="pk">═══ БЛОК 6: РЕГУЛЯТОРНАЯ КАРТА ═══</span>
+
+<span class="ps">6.1 HEAT MAP стран</span>
+   <span class="pv">- Создай HTML таблицу или карту: страна → статус → потенциал
+   - Категории: Fully regulated / Regulated с ограничениями /
+     Grey market / Blocked / Emerging
+   - Фокус рынки: Индия, Бразилия, Нигерия, Германия,
+     Великобритания, США, ОАЭ, Япония</span>
+
+<span class="pk">═══ ФОРМАТ ВЫВОДА ═══</span>
+<span class="ps">□ igaming_universe_analysis.md — полный Markdown отчёт
+□ financial_model.csv — финансовая модель Spribe (Excel-совместимый)
+□ mindmap.html — интерактивная карта D3.js (standalone файл)
+□ competitive_matrix.csv — матрица конкурентов
+□ regulatory_heatmap.html — карта регуляции по странам
+□ executive_summary.md — 1 страница для инвестора</span>
+
+<span class="pk">ИСТОЧНИКИ ДЛЯ ПОИСКА:</span>
+<span class="pv">- H2 Gambling Capital (h2gc.com) — лучший источник по iGaming
+- Eilers & Krejcik Gaming — US market
+- iGaming Business (igamingbusiness.com)
+- SBC News (sbcnews.co.uk)
+- Gambling Insider (gamblinginsider.com)
+- Evolution Gaming Annual Report 2023 (публичная компания)
+- Statista: online gambling market size</span>
+
+<span class="pk">КОНТЕКСТ (первичный источник — интервью CEO Spribe):</span>
+<span class="pv">GGR операторов ~$550M/мес · Wager ~$14B/мес · 60M игроков
+Ставка 7-9% GGR · Маркетинг ~$50M/год · Оценка $2B+
+5 000 казино-клиентов · 350 сотрудников · 92% Crash market
+Топ-рынки: Индия (крупнейший), Африка (быстрейший), США (заблокирован)</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>iGaming Universe Map v2 · На основе интервью с Дэвидом Лоладзе, CEO Spribe · 2024</p>
+  <p style="margin-top:6px;font-size:9px;">Данные частично расчётные и основаны на публичных заявлениях. Не является инвестиционной рекомендацией.</p>
+</footer>
+
+</div>
+</body>
+</html>

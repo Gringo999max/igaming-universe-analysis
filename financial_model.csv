@@ -1,0 +1,112 @@
+Category,Metric,Value,Unit,Source/Note
+,,,,
+═══ SPRIBE REVENUE MODEL ═══,,,,
+Wager Volume,Monthly Wager,$14000,M USD,CEO interview
+Wager Volume,Annual Wager,$168000,M USD,Calculated
+RTP,Return to Player %,97%,,Industry standard for Crash
+GGR,Monthly GGR (operators),$420,M USD,"Wager × (1 - RTP) = $14B × 3%"
+GGR,CEO stated GGR/month,$500-550,M USD,"CEO interview (includes bonuses, promotions absorbed)"
+GGR,Delta explanation,"+$80-130M","M USD","Operator promotions/bonuses count as GGR but not pure wager margin"
+,,,,
+═══ SPRIBE TAKE RATE ═══,,,,
+Pricing,Average GGR take rate,9%,,"Raised from 7-8% to 9% (2025 data, aggregators get 2-3% margin)"
+Pricing,Low end take rate,7%,,Legacy contracts / Tier-1 volume discount
+Pricing,High end take rate,9%,,Current standard rate (raised from 7%)
+Revenue,Monthly Rev (on $420M GGR),$33.6,M USD,Conservative (3% RTP margin)
+Revenue,Monthly Rev (on $550M GGR),$44.0,M USD,CEO stated GGR basis
+Revenue,Annual Rev (conservative),$403,M USD,$33.6M × 12
+Revenue,Annual Rev (CEO basis),$528,M USD,$44M × 12
+Revenue,Best estimate annual,$480-528,M USD,Range
+,,,,
+═══ OPERATING COSTS ═══,,,,
+People,Employees,350,,CEO interview
+People,Avg salary estimate,$80000,USD/yr,"Georgia-based, mix of senior/junior"
+People,Total people cost,$28,M USD/yr,350 × $80K
+Marketing,Annual marketing spend,$50,M USD/yr,CEO interview
+Marketing,UFC deal,$40,M USD,"3 years ($13.3M/yr)"
+Marketing,AC Milan + Cricket + WWE,$15-20,M USD/yr,Estimated
+Marketing,Affiliates + Digital,$15-20,M USD/yr,Estimated
+Infrastructure,Servers + Cloud,$5-10,M USD/yr,"High-availability, global CDN"
+Infrastructure,Licensing + Legal,$3-5,M USD/yr,"MGA, Curaçao, compliance"
+Infrastructure,Office + Other,$2-3,M USD/yr,Georgia + Malta offices
+,,,,
+═══ P&L MODEL ═══,,,,
+P&L,Revenue (mid),$500,M USD/yr,Best estimate
+P&L,COGS (hosting + licensing),$8,M USD/yr,~1.6% of revenue
+P&L,Gross Profit,$492,M USD/yr,98.4% GP margin (pure software)
+P&L,People cost,$28,M USD/yr,5.6%
+P&L,Marketing,$50,M USD/yr,10%
+P&L,G&A + Legal,$10,M USD/yr,2%
+P&L,Total OpEx,$88,M USD/yr,17.6%
+P&L,EBITDA,$412,M USD/yr,~82% margin (theoretical)
+P&L,Realistic EBITDA (adj.),$350-400,M USD/yr,"65-80% margin (hidden costs, taxes)"
+P&L,EBITDA margin range,65-80%,,vs Evolution 55-60%
+P&L,Note on higher margin,,,Spribe = pure software B2B vs Evolution = live studios + 20K staff
+,,,,
+═══ VALUATION ANALYSIS ═══,,,,
+Benchmark: Evolution Gaming (UPDATED FY2025),,,,
+Evolution,Revenue FY2025,EUR 2067,M EUR,"~$2.3B (CompaniesMarketCap, iGamingFuture)"
+Evolution,EBITDA FY2025,EUR 1366,M EUR,
+Evolution,EBITDA margin,66.1%,,"HIGHER than previously estimated (was 57%)"
+Evolution,Market Cap (Dec 2025),$13400,M USD,"Down from peak ~$22B"
+Evolution,P/S ratio (TTM),~4.9x,,"SIGNIFICANTLY lower than prior 10x estimate"
+Evolution,EV/EBITDA,~13x,,"Below 5-year average of 23x"
+Evolution,NOTE:,,,P/S compressed from 10x to 4.9x — impacts Spribe valuation model
+,,,,
+Spribe Valuation Scenarios,,,,
+Scenario,Description,P/S Multiple,Implied Valuation (M USD),
+Conservative,"Private co. discount, single-product risk",3x,$1500,
+Base Case,CEO stated valuation ~$2B,4x,$2000,
+Optimistic,"If diversified, multi-game",6x,$3000,
+IPO Low,"Public market, growth premium",8x,$4000,
+IPO High,"Evolution-like premium",10x,$5000,
+,,,,
+Discount Factors vs Evolution,,,,
+Factor,Impact,Discount %,,
+Private company,No liquidity premium,-20%,,
+Single product risk,Aviator = 92% revenue,-15%,,
+Regulatory risk,iGaming B2B exposure,-10%,,
+Revenue concentration,Top operators = large share,-5%,,
+Growth premium,Faster growth than Evolution,+10%,,
+Software margin,Higher margins than Evolution,+5%,,
+Total estimated discount,,-35%,,
+Implied fair P/S (OLD: Evo 10x),Evolution 10x × (1-35%),6.5x,$3250,"Based on pre-correction Evolution P/S"
+UPDATED: Implied fair P/S,Evolution 4.9x × (1-35%) + growth premium,3.5-4.5x,$1750-2250,"Based on actual FY2025 Evolution P/S 4.9x"
+,,,,
+═══ GROWTH PROJECTIONS ═══,,,,
+Growth,2024 Revenue est.,$500,M USD,Base
+Growth,2025 Revenue (25% growth),$625,M USD,
+Growth,2026 Revenue (20% growth),$750,M USD,
+Growth,2027 Revenue (15% growth),$863,M USD,Maturing
+Growth,2027 EBITDA (70% margin),$604,M USD,
+Growth,2027 Valuation @ 6x P/S,$5175,M USD,$5B+ if execution holds
+,,,,
+═══ MARKET CONTEXT ═══,,,,
+Online Gambling Global,Total GGR 2024,$78.7-95,B USD,"GVR: $78.7B, GM Insights: $93-95B"
+Online Gambling Global,H2GC total gambling 2023,$536,B USD,H2 Gambling Capital
+Online Gambling Global,H2GC total gambling 2024,$573,B USD,+7% YoY
+Online Gambling,CAGR 2024-2030,11.9%,,Grand View Research → $153.6B by 2030
+Crash Games Segment,Estimated GGR 2024,$1-3,B USD,"H2GC: 1.1% of EU iCasino; broader global est. higher"
+Crash Games,Aviator annual wagers 2025,EUR 160,B EUR,"Tribuna: EUR 160B in 2025"
+Crash Games,CAGR 2024-2027,25-30%,,Fastest growing segment
+Crash Games,Content growth,+57.6%,YoY,New crash titles launched
+Casino Online,Share of online gambling,~35-40%,,EGBA: >50% in Europe
+Sports Betting,Share of online gambling,~45-56%,,GVR: 56%
+Poker + Lottery + Other,Share,~10-20%,,
+,,,,
+═══ UPDATED OPERATOR REVENUES (2025) ═══,,,,
+Flutter/FanDuel,Revenue 2025,$16400,M USD,+17% YoY
+DraftKings,Revenue 2025,$6050,M USD,+27% YoY; first annual profit
+Bet365,Revenue 2025,$5100,M USD,£4.04B; +9% YoY
+Stake.com,Est. GGR 2025,$4700,M USD,"Crypto operator, est. valuation $14-23B"
+Entain,NGR 2025,$6800,M USD,"£5.33B + BetMGM; total £6.4B"
+Super Group/Betway,Revenue 2025,$2200,M USD,+22% YoY
+US iGaming total,Revenue 2025,$10740,M USD,+27.6% YoY
+,,,,
+═══ SPRIBE UPDATED METRICS (2025-2026 data) ═══,,,,
+Spribe,Total registered players,380,M,"Tribuna Feb 2026 (60M = MAU, not total)"
+Spribe,Monthly active users,60,M,
+Spribe,Bets per minute,350000,,Target: 1M
+Spribe,Annual wagers 2025,EUR 160,B EUR,Tribuna
+Spribe,HQ relocated to,Warsaw,,"Originally Georgia, now Warsaw + Malta"
+Spribe,EBITDA estimate,$300-400,M USD,Industry estimates

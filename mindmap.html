@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iGaming Universe — Spribe Ecosystem Mind Map</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0e1a;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+#container { width: 100%; height: 100vh; position: relative; }
+svg { width: 100%; height: 100%; }
+
+/* Tooltip */
+#tooltip {
+  position: absolute;
+  padding: 12px 16px;
+  background: rgba(15, 20, 40, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  max-width: 360px;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#tooltip .tt-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+#tooltip .tt-type {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+#tooltip .tt-metric {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+#tooltip .tt-metric-label { opacity: 0.6; }
+#tooltip .tt-metric-value { font-weight: 600; }
+
+/* Legend */
+#legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(15, 20, 40, 0.9);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  z-index: 50;
+}
+#legend h3 {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.legend-section { margin-bottom: 10px; }
+.legend-section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.5;
+  margin-bottom: 5px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.legend-line {
+  width: 24px;
+  height: 3px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+/* Title */
+#title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 50;
+}
+#title h1 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00e5ff, #7c4dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+#title p {
+  font-size: 12px;
+  opacity: 0.5;
+  margin-top: 4px;
+}
+
+/* Controls */
+#controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 50;
+}
+.ctrl-btn {
+  padding: 8px 16px;
+  background: rgba(15, 20, 40, 0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+.ctrl-btn:hover {
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+
+/* Info panel */
+#info-panel {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background: rgba(15, 20, 40, 0.9);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  z-index: 50;
+  max-width: 240px;
+}
+#info-panel .stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+#info-panel .stat-value {
+  font-weight: 700;
+  color: #00e5ff;
+}
+
+/* Glow filter */
+.glow { filter: url(#glow); }
+</style>
+</head>
+<body>
+<div id="container">
+  <div id="title">
+    <h1>iGAMING UNIVERSE — SPRIBE ECOSYSTEM</h1>
+    <p>Interactive Mind Map · Force-Directed Graph · D3.js</p>
+  </div>
+
+  <div id="controls">
+    <button class="ctrl-btn" onclick="resetZoom()">Reset View</button>
+    <button class="ctrl-btn" onclick="toggleLabels()">Toggle Labels</button>
+    <button class="ctrl-btn" onclick="exportPNG()">Export PNG</button>
+  </div>
+
+  <div id="info-panel">
+    <div style="font-weight:700; margin-bottom:8px; color:#fff;">Key Metrics</div>
+    <div class="stat"><span>Wager/month</span><span class="stat-value">$14-17B</span></div>
+    <div class="stat"><span>Wagers 2025</span><span class="stat-value">EUR 160B</span></div>
+    <div class="stat"><span>GGR/month</span><span class="stat-value">$550M</span></div>
+    <div class="stat"><span>Spribe Rev/year</span><span class="stat-value">~$500M</span></div>
+    <div class="stat"><span>Total Players</span><span class="stat-value">380M</span></div>
+    <div class="stat"><span>MAU</span><span class="stat-value">60M</span></div>
+    <div class="stat"><span>Bets/min</span><span class="stat-value">350K</span></div>
+    <div class="stat"><span>Casino clients</span><span class="stat-value">5,000+</span></div>
+    <div class="stat"><span>Crash share</span><span class="stat-value">~90%+</span></div>
+    <div class="stat"><span>Take rate</span><span class="stat-value">9% GGR</span></div>
+    <div class="stat"><span>Valuation</span><span class="stat-value">$1.5-2B</span></div>
+    <div class="stat"><span>Evo P/S benchmark</span><span class="stat-value">4.9x</span></div>
+  </div>
+
+  <div id="legend">
+    <h3>LEGEND</h3>
+    <div class="legend-section">
+      <div class="legend-section-title">Node Types</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00e5ff;box-shadow:0 0 8px #00e5ff;"></div>Spribe / Core</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff9800;"></div>Operators</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ab47bc;"></div>Competitors</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffd600;"></div>Marketing / Sponsors</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4caf50;"></div>Affiliates</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#42a5f5;"></div>Markets / Regions</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#78909c;"></div>Benchmarks</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ef5350;"></div>PAM Platforms</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#26a69a;"></div>Payments (PSP)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8d6e63;"></div>Regulators</div>
+    </div>
+    <div class="legend-section">
+      <div class="legend-section-title">Edge Types</div>
+      <div class="legend-item"><div class="legend-line" style="background:#00e5ff;"></div>Revenue / Money flow</div>
+      <div class="legend-item"><div class="legend-line" style="background:#ff9800;"></div>Content / Integration</div>
+      <div class="legend-item"><div class="legend-line" style="background:#4caf50;"></div>Traffic / Acquisition</div>
+      <div class="legend-item"><div class="legend-line" style="background:#ef5350;"></div>Competition</div>
+      <div class="legend-item"><div class="legend-line" style="background:#78909c;opacity:0.5;border-top:2px dashed #78909c;height:0;"></div>Historical / Reference</div>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA: Nodes and Links
+// ═══════════════════════════════════════════════════════
+
+const nodes = [
+  // CENTER — SPRIBE
+  { id: "spribe", label: "Spribe / Aviator", group: "core", size: 50,
+    metrics: { "Founded": "2018, Georgia → HQ Warsaw", "Flagship": "Aviator (2019)", "Wager/mo": "$14-17B", "Annual Wagers 2025": "EUR 160B", "GGR/mo (operators)": "~$550M", "Revenue/yr": "~$500M", "Crash Market Share": "~90%+", "Total Players": "380M (60M MAU)", "Bets/min": "350K (target 1M)", "Casino Clients": "5,000+", "Team": "350 employees", "Valuation": "$1.5-2B est.", "GGR Take Rate": "9% (raised from 7%)" }},
+
+  // OPERATORS
+  { id: "everymatrix", label: "EveryMatrix", group: "operator", size: 22,
+    metrics: { "Type": "PAM + First Spribe Client", "Note": "Perpetual contract", "HQ": "Malta", "Clients": "300+ operators" }},
+  { id: "hollywoodbets", label: "Hollywoodbets", group: "operator", size: 20,
+    metrics: { "Region": "South Africa / Africa", "Type": "Sports + Casino", "Aviator Status": "Top game", "Est. GGR": "$500M+/yr" }},
+  { id: "1xbet", label: "1xBet", group: "operator", size: 24,
+    metrics: { "Type": "Global operator", "Markets": "CIS, Africa, Asia, LatAm", "Est. Revenue": "$2B+/yr", "Aviator": "Top-3 game sitewide" }},
+  { id: "stake", label: "Stake.com", group: "operator", size: 22,
+    metrics: { "Type": "Crypto casino", "HQ": "Curaçao", "Est. Revenue": "$2.6B (2022)", "Markets": "Global, crypto-native", "Aviator": "Integrated" }},
+  { id: "bet365", label: "Bet365", group: "operator", size: 26,
+    metrics: { "Type": "Largest private operator", "Revenue": "£3.7B (2023)", "HQ": "UK", "Markets": "Global regulated", "Casino": "Major vertical" }},
+  { id: "cosmolot", label: "Cosmolot", group: "operator", size: 16,
+    metrics: { "Region": "Ukraine", "Type": "Licensed operator", "Note": "Key Spribe client", "Aviator": "#1 game" }},
+  { id: "betway", label: "Betway", group: "operator", size: 18,
+    metrics: { "Type": "Global operator", "HQ": "Malta/UK", "Markets": "Africa, Europe, Americas", "Owner": "Super Group" }},
+  { id: "parimatch", label: "Parimatch", group: "operator", size: 17,
+    metrics: { "Type": "Global operator", "HQ": "Cyprus", "Markets": "CIS, Africa, Asia" }},
+
+  // COMPETITORS
+  { id: "smartsoft", label: "SmartSoft / JetX", group: "competitor", size: 16,
+    metrics: { "Founded": "2015, Georgia", "Flagship": "JetX", "Market Share": "~3-5%", "Pricing": "~8-10% GGR", "Diff": "3D graphics, different UX" }},
+  { id: "aviatrix", label: "Aviatrix", group: "competitor", size: 12,
+    metrics: { "HQ": "Malta", "Type": "NFT-enhanced crash", "Market Share": "<1%", "Diff": "Customizable planes, NFTs" }},
+  { id: "spaceman", label: "Pragmatic / Spaceman", group: "competitor", size: 14,
+    metrics: { "Parent": "Pragmatic Play", "Launched": "2022", "Market Share": "~2%", "Advantage": "Pragmatic distribution network" }},
+  { id: "bgaming", label: "BGaming Crash", group: "competitor", size: 10,
+    metrics: { "HQ": "Curaçao", "Type": "Multi-game provider", "Crash Games": "Space XY, Rocket Dice" }},
+  { id: "evoplay", label: "Evoplay / Turbo", group: "competitor", size: 11,
+    metrics: { "HQ": "Ukraine/EU", "Type": "Innovative slots + crash", "Games": "Turbo Games brand" }},
+  { id: "bustabit", label: "Bustabit", group: "competitor", size: 10,
+    metrics: { "Type": "Genre ORIGIN (2014)", "Model": "Open-source, Bitcoin", "Status": "Niche, not commercial", "Legacy": "Inspired Aviator concept" }},
+  { id: "draftkings_crash", label: "DraftKings Rocket", group: "competitor", size: 13,
+    metrics: { "Type": "Proprietary crash game", "Market": "USA only", "Advantage": "US market monopoly (Spribe blocked)", "Note": "Spribe cannot enter US" }},
+
+  // MARKETING / SPONSORS
+  { id: "ufc", label: "UFC Sponsorship", group: "marketing", size: 18,
+    metrics: { "Deal": "$40M / 3 years", "Type": "Official partner", "Reach": "700M+ viewers globally", "Started": "2023" }},
+  { id: "acmilan", label: "AC Milan", group: "marketing", size: 15,
+    metrics: { "Type": "Official partner", "Reach": "500M+ fans", "Region Focus": "Europe, Latin America" }},
+  { id: "cricket", label: "Cricket Leagues", group: "marketing", size: 14,
+    metrics: { "Type": "Sponsorship", "Leagues": "IPL partners, SA20", "Region Focus": "India, South Africa" }},
+  { id: "ice_sbc", label: "ICE / SBC Events", group: "marketing", size: 12,
+    metrics: { "Type": "B2B Conferences", "Events": "ICE London, SBC Summit", "Purpose": "Operator acquisition" }},
+  { id: "wwe", label: "WWE Partnership", group: "marketing", size: 13,
+    metrics: { "Type": "Entertainment partner", "Reach": "Global TV audiences" }},
+
+  // AFFILIATES
+  { id: "gypsy", label: "Gypsy Partners", group: "affiliate", size: 13,
+    metrics: { "Type": "Spribe affiliate program", "Model": "RevShare + CPA", "Focus": "Aviator traffic" }},
+  { id: "affpro", label: "AFFPRO", group: "affiliate", size: 12,
+    metrics: { "Type": "Affiliate network", "Model": "CPA / RevShare / Hybrid" }},
+  { id: "streamers", label: "YouTube/Twitch Streamers", group: "affiliate", size: 15,
+    metrics: { "Type": "Content creators", "Platform": "YouTube, Twitch, TikTok", "Model": "RevShare, sponsorships", "Impact": "Key for Gen Z acquisition" }},
+  { id: "catena", label: "Catena Media", group: "affiliate", size: 12,
+    metrics: { "Type": "Public affiliate co.", "Revenue": "€60M+ (2023)", "Model": "SEO + paid media", "HQ": "Malta" }},
+
+  // MARKETS
+  { id: "india", label: "🇮🇳 India", group: "market", size: 22,
+    metrics: { "Status": "Largest Spribe market", "Share of Revenue": "~7%", "TAM 2024": "$3.7B → $10.8B by 2030", "Regulation": "National Act passed Aug 2025", "CAGR": "13.7%", "GST": "28% (kills margins)" }},
+  { id: "africa", label: "🌍 Africa", group: "market", size: 20,
+    metrics: { "Status": "Fastest growing", "Nigeria TAM": "$3.63B (2025)", "Key Countries": "Nigeria, Kenya, SA, Ghana", "Driver": "Mobile-first, young population", "Growth": "50%+ CAGR" }},
+  { id: "latam", label: "🌎 LatAm", group: "market", size: 18,
+    metrics: { "Key Countries": "Brazil, Colombia, Mexico, Peru", "Brazil 2025": "$7B, 80+ licensed ops, 22.1M players", "Growth": "30%+ CAGR", "Regulation": "Brazil fully regulated Jan 2025" }},
+  { id: "europe", label: "🌍 Europe / ROW", group: "market", size: 19,
+    metrics: { "Share": "~9% Spribe revenue", "Key": "UK, Germany, Italy, Spain", "Status": "Mature, regulated", "Challenge": "Strict compliance" }},
+  { id: "usa", label: "🇺🇸 USA (Blocked)", group: "market_blocked", size: 15,
+    metrics: { "Status": "BLOCKED for Spribe", "Reason": "US regulatory barriers", "iGaming 2025": "$10.74B (+27.6%)", "Opportunity": "DraftKings Rocket fills gap", "Risk": "Missing world's largest market" }},
+  { id: "cis", label: "🌍 CIS / Turkey", group: "market", size: 16,
+    metrics: { "Countries": "Russia, Ukraine, Kazakhstan, Turkey", "Status": "Mixed regulation", "Aviator": "Massively popular" }},
+
+  // BENCHMARKS
+  { id: "evolution", label: "Evolution Gaming", group: "benchmark", size: 24,
+    metrics: { "Revenue FY2025": "EUR 2.07B (~$2.3B)", "EBITDA Margin": "66.1%", "Market Cap": "$13.4B (from $22B peak)", "P/S (TTM)": "~4.9x", "EV/EBITDA": "~13x", "Employees": "20,000+", "Product": "Live Casino dominant", "Note": "P/S compressed from 10x → 4.9x" }},
+  { id: "pragmatic_parent", label: "Pragmatic Play", group: "benchmark", size: 18,
+    metrics: { "Type": "Private (REEL Group)", "Revenue est.": "$1B+", "Product": "Slots + Live + Crash", "HQ": "Malta", "Position": "#2-3 game provider" }},
+  { id: "flutter", label: "Flutter / FanDuel", group: "benchmark", size: 22,
+    metrics: { "Revenue 2025": "$16.4B (+17%)", "Market Cap": "~$35B", "Type": "World's largest operator", "Brands": "FanDuel, Paddy Power, Betfair" }},
+
+  // PAM PLATFORMS
+  { id: "softswiss", label: "SoftSwiss", group: "pam", size: 15,
+    metrics: { "HQ": "Belarus/Malta", "Clients": "800+ brands", "GGR processed": "$5B+/yr", "Focus": "Crypto, turnkey" }},
+  { id: "betconstruct", label: "BetConstruct", group: "pam", size: 14,
+    metrics: { "HQ": "Armenia", "Type": "Full platform + games", "Clients": "400+", "Own Games": "Yes" }},
+  { id: "digitain", label: "Digitain", group: "pam", size: 12,
+    metrics: { "HQ": "Armenia", "Type": "Sportsbook + Platform", "Markets": "Europe, Asia, Africa" }},
+  { id: "gr8tech", label: "GR8 Tech", group: "pam", size: 13,
+    metrics: { "HQ": "Ukraine/Malta", "Origin": "Parimatch Tech spinoff", "Type": "Full iGaming platform" }},
+
+  // PAYMENTS
+  { id: "nuvei", label: "NUVEI", group: "payment", size: 14,
+    metrics: { "Revenue": "$342M (2024)", "Type": "Public PSP", "iGaming Share": "~40% revenue", "Markets": "Global" }},
+  { id: "skrill", label: "Skrill/Neteller", group: "payment", size: 13,
+    metrics: { "Owner": "Paysafe Group", "Type": "eWallet", "iGaming": "Dominant in EU", "Market Share": "Major PSP" }},
+  { id: "trustly", label: "Trustly", group: "payment", size: 12,
+    metrics: { "Type": "Open banking PSP", "HQ": "Sweden", "iGaming": "Pay N Play pioneer" }},
+
+  // REGULATORS
+  { id: "mga", label: "MGA (Malta)", group: "regulator", size: 14,
+    metrics: { "Type": "Premier license", "Licensees": "400+", "Reputation": "Gold standard EU", "Spribe": "Primary license" }},
+  { id: "ukgc", label: "UKGC (UK)", group: "regulator", size: 14,
+    metrics: { "Type": "Strictest regulator", "Market Size": "£15B+ GGR", "Trend": "Tightening affordability" }},
+  { id: "curacao", label: "Curaçao", group: "regulator", size: 13,
+    metrics: { "Type": "Popular offshore license", "Reform": "New framework 2024-25", "Licensees": "Thousands", "Reputation": "Improving" }},
+];
+
+const links = [
+  // Spribe → Operators (money flow)
+  { source: "spribe", target: "everymatrix", type: "money", label: "8% GGR" },
+  { source: "spribe", target: "hollywoodbets", type: "content", label: "Integration" },
+  { source: "spribe", target: "1xbet", type: "content", label: "Top game" },
+  { source: "spribe", target: "stake", type: "content", label: "Integration" },
+  { source: "spribe", target: "bet365", type: "content", label: "Integration" },
+  { source: "spribe", target: "cosmolot", type: "content", label: "#1 game" },
+  { source: "spribe", target: "betway", type: "content", label: "Integration" },
+  { source: "spribe", target: "parimatch", type: "content", label: "Integration" },
+
+  // Operators → PAM
+  { source: "everymatrix", target: "softswiss", type: "content", label: "PAM" },
+  { source: "hollywoodbets", target: "betconstruct", type: "content", label: "" },
+  { source: "1xbet", target: "softswiss", type: "content", label: "" },
+  { source: "parimatch", target: "gr8tech", type: "content", label: "Spinoff" },
+
+  // Spribe → Competitors (competition)
+  { source: "spribe", target: "smartsoft", type: "competition", label: "92% vs 3-5%" },
+  { source: "spribe", target: "aviatrix", type: "competition", label: "" },
+  { source: "spribe", target: "spaceman", type: "competition", label: "" },
+  { source: "spribe", target: "bgaming", type: "competition", label: "" },
+  { source: "spribe", target: "evoplay", type: "competition", label: "" },
+  { source: "bustabit", target: "spribe", type: "historical", label: "Inspired (2014→2019)" },
+  { source: "draftkings_crash", target: "spribe", type: "competition", label: "US substitute" },
+
+  // Spribe → Marketing
+  { source: "spribe", target: "ufc", type: "money", label: "$40M/3yr" },
+  { source: "spribe", target: "acmilan", type: "money", label: "Sponsor" },
+  { source: "spribe", target: "cricket", type: "money", label: "Sponsor" },
+  { source: "spribe", target: "ice_sbc", type: "money", label: "B2B" },
+  { source: "spribe", target: "wwe", type: "money", label: "Sponsor" },
+
+  // Spribe → Affiliates
+  { source: "spribe", target: "gypsy", type: "traffic", label: "RevShare" },
+  { source: "spribe", target: "affpro", type: "traffic", label: "CPA" },
+  { source: "streamers", target: "spribe", type: "traffic", label: "Player acquisition" },
+  { source: "catena", target: "spribe", type: "traffic", label: "SEO traffic" },
+
+  // Spribe → Markets
+  { source: "spribe", target: "india", type: "money", label: "7% revenue" },
+  { source: "spribe", target: "africa", type: "money", label: "Fastest" },
+  { source: "spribe", target: "latam", type: "money", label: "Growing" },
+  { source: "spribe", target: "europe", type: "money", label: "9% revenue" },
+  { source: "spribe", target: "usa", type: "historical", label: "BLOCKED" },
+  { source: "spribe", target: "cis", type: "money", label: "Major" },
+
+  // Markets → sponsors reach
+  { source: "ufc", target: "usa", type: "traffic", label: "Brand reach" },
+  { source: "ufc", target: "latam", type: "traffic", label: "" },
+  { source: "acmilan", target: "europe", type: "traffic", label: "" },
+  { source: "acmilan", target: "latam", type: "traffic", label: "" },
+  { source: "cricket", target: "india", type: "traffic", label: "" },
+  { source: "cricket", target: "africa", type: "traffic", label: "" },
+
+  // Benchmarks
+  { source: "evolution", target: "spribe", type: "historical", label: "Benchmark: 10x P/S" },
+  { source: "pragmatic_parent", target: "spaceman", type: "content", label: "Owner" },
+  { source: "flutter", target: "bet365", type: "competition", label: "Compete" },
+
+  // Payments → Operators
+  { source: "nuvei", target: "stake", type: "money", label: "PSP" },
+  { source: "skrill", target: "bet365", type: "money", label: "eWallet" },
+  { source: "trustly", target: "betway", type: "money", label: "Open Banking" },
+
+  // Regulators → Markets
+  { source: "mga", target: "europe", type: "content", label: "License" },
+  { source: "ukgc", target: "europe", type: "content", label: "License" },
+  { source: "curacao", target: "cis", type: "content", label: "License" },
+  { source: "mga", target: "spribe", type: "content", label: "Primary license" },
+];
+
+// ═══════════════════════════════════════════════════════
+// COLOR SCHEME
+// ═══════════════════════════════════════════════════════
+
+const groupColors = {
+  core: "#00e5ff",
+  operator: "#ff9800",
+  competitor: "#ab47bc",
+  marketing: "#ffd600",
+  affiliate: "#4caf50",
+  market: "#42a5f5",
+  market_blocked: "#ef5350",
+  benchmark: "#78909c",
+  pam: "#ef5350",
+  payment: "#26a69a",
+  regulator: "#8d6e63"
+};
+
+const edgeColors = {
+  money: "#00e5ff",
+  content: "#ff9800",
+  traffic: "#4caf50",
+  competition: "#ef5350",
+  historical: "#78909c"
+};
+
+// ═══════════════════════════════════════════════════════
+// SVG SETUP
+// ═══════════════════════════════════════════════════════
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("#container")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+// Defs for glow and arrows
+const defs = svg.append("defs");
+
+// Glow filter
+const filter = defs.append("filter").attr("id", "glow");
+filter.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "coloredBlur");
+const feMerge = filter.append("feMerge");
+feMerge.append("feMergeNode").attr("in", "coloredBlur");
+feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+// Radial gradients for nodes
+Object.entries(groupColors).forEach(([group, color]) => {
+  const grad = defs.append("radialGradient")
+    .attr("id", `grad-${group}`)
+    .attr("cx", "30%").attr("cy", "30%");
+  grad.append("stop").attr("offset", "0%").attr("stop-color", d3.color(color).brighter(1));
+  grad.append("stop").attr("offset", "100%").attr("stop-color", color);
+});
+
+// Arrow markers
+Object.entries(edgeColors).forEach(([type, color]) => {
+  defs.append("marker")
+    .attr("id", `arrow-${type}`)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 20)
+    .attr("refY", 0)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-4L10,0L0,4")
+    .attr("fill", color)
+    .attr("opacity", 0.6);
+});
+
+// Main group for zoom/pan
+const g = svg.append("g");
+
+// Zoom behavior
+const zoom = d3.zoom()
+  .scaleExtent([0.2, 4])
+  .on("zoom", (event) => g.attr("transform", event.transform));
+svg.call(zoom);
+
+// ═══════════════════════════════════════════════════════
+// FORCE SIMULATION
+// ═══════════════════════════════════════════════════════
+
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(d => {
+    if (d.source.id === "spribe" || d.target.id === "spribe") return 200;
+    return 120;
+  }).strength(d => {
+    if (d.type === "historical") return 0.1;
+    if (d.source.id === "spribe" || d.target.id === "spribe") return 0.3;
+    return 0.2;
+  }))
+  .force("charge", d3.forceManyBody().strength(d => d.id === "spribe" ? -2000 : -400))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("collision", d3.forceCollide().radius(d => d.size + 15))
+  .force("x", d3.forceX(width / 2).strength(0.03))
+  .force("y", d3.forceY(height / 2).strength(0.03));
+
+// ═══════════════════════════════════════════════════════
+// RENDER LINKS
+// ═══════════════════════════════════════════════════════
+
+const link = g.append("g")
+  .selectAll("line")
+  .data(links)
+  .join("line")
+  .attr("stroke", d => edgeColors[d.type] || "#555")
+  .attr("stroke-width", d => d.type === "money" ? 2.5 : d.type === "competition" ? 1.5 : 1.2)
+  .attr("stroke-opacity", d => d.type === "historical" ? 0.3 : 0.4)
+  .attr("stroke-dasharray", d => d.type === "historical" ? "6,4" : d.type === "competition" ? "3,3" : "none")
+  .attr("marker-end", d => `url(#arrow-${d.type})`);
+
+// Animated pulse on money links
+link.filter(d => d.type === "money")
+  .each(function() {
+    d3.select(this)
+      .attr("stroke-opacity", 0.3)
+      .transition()
+      .duration(2000)
+      .ease(d3.easeSinInOut)
+      .attr("stroke-opacity", 0.7)
+      .transition()
+      .duration(2000)
+      .ease(d3.easeSinInOut)
+      .attr("stroke-opacity", 0.3)
+      .on("end", function repeat() {
+        d3.select(this)
+          .transition()
+          .duration(2000)
+          .ease(d3.easeSinInOut)
+          .attr("stroke-opacity", 0.7)
+          .transition()
+          .duration(2000)
+          .ease(d3.easeSinInOut)
+          .attr("stroke-opacity", 0.3)
+          .on("end", repeat);
+      });
+  });
+
+// Link labels
+const linkLabel = g.append("g")
+  .selectAll("text")
+  .data(links.filter(d => d.label))
+  .join("text")
+  .text(d => d.label)
+  .attr("font-size", 9)
+  .attr("fill", d => edgeColors[d.type] || "#888")
+  .attr("fill-opacity", 0.7)
+  .attr("text-anchor", "middle")
+  .attr("dy", -4);
+
+// ═══════════════════════════════════════════════════════
+// RENDER NODES
+// ═══════════════════════════════════════════════════════
+
+const node = g.append("g")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+  .call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended));
+
+// Node outer glow
+node.append("circle")
+  .attr("r", d => d.size + 4)
+  .attr("fill", "none")
+  .attr("stroke", d => groupColors[d.group])
+  .attr("stroke-width", d => d.id === "spribe" ? 3 : 1.5)
+  .attr("stroke-opacity", 0.3)
+  .attr("class", "glow");
+
+// Node circle
+node.append("circle")
+  .attr("r", d => d.size)
+  .attr("fill", d => `url(#grad-${d.group})`)
+  .attr("stroke", d => d3.color(groupColors[d.group]).brighter(0.5))
+  .attr("stroke-width", d => d.id === "spribe" ? 3 : 1.5)
+  .attr("opacity", 0.9);
+
+// Core pulse animation for Spribe
+node.filter(d => d.id === "spribe")
+  .select("circle:first-child")
+  .each(function() {
+    d3.select(this)
+      .transition()
+      .duration(2000)
+      .ease(d3.easeSinInOut)
+      .attr("r", 58)
+      .attr("stroke-opacity", 0.6)
+      .transition()
+      .duration(2000)
+      .ease(d3.easeSinInOut)
+      .attr("r", 54)
+      .attr("stroke-opacity", 0.2)
+      .on("end", function repeat() {
+        d3.select(this)
+          .transition()
+          .duration(2000)
+          .ease(d3.easeSinInOut)
+          .attr("r", 58)
+          .attr("stroke-opacity", 0.6)
+          .transition()
+          .duration(2000)
+          .ease(d3.easeSinInOut)
+          .attr("r", 54)
+          .attr("stroke-opacity", 0.2)
+          .on("end", repeat);
+      });
+  });
+
+// Node labels
+let labelsVisible = true;
+const labels = node.append("text")
+  .text(d => d.label)
+  .attr("text-anchor", "middle")
+  .attr("dy", d => d.size + 16)
+  .attr("font-size", d => d.id === "spribe" ? 14 : d.size > 18 ? 11 : 10)
+  .attr("font-weight", d => d.id === "spribe" ? 700 : d.size > 18 ? 600 : 400)
+  .attr("fill", d => groupColors[d.group])
+  .attr("opacity", 0.9)
+  .style("text-shadow", "0 0 8px rgba(0,0,0,0.8)");
+
+// ═══════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════
+
+const tooltip = d3.select("#tooltip");
+
+node.on("mouseover", function(event, d) {
+  let html = `<div class="tt-title">${d.label}</div>`;
+  html += `<div class="tt-type" style="color:${groupColors[d.group]}">${d.group.replace('_', ' ')}</div>`;
+  if (d.metrics) {
+    Object.entries(d.metrics).forEach(([key, val]) => {
+      html += `<div class="tt-metric">
+        <span class="tt-metric-label">${key}</span>
+        <span class="tt-metric-value" style="color:${groupColors[d.group]}">${val}</span>
+      </div>`;
+    });
+  }
+  tooltip.html(html)
+    .style("opacity", 1)
+    .style("left", (event.pageX + 15) + "px")
+    .style("top", (event.pageY - 10) + "px");
+
+  // Highlight connected
+  link.attr("stroke-opacity", l =>
+    (l.source.id === d.id || l.target.id === d.id) ? 0.9 : 0.1
+  ).attr("stroke-width", l =>
+    (l.source.id === d.id || l.target.id === d.id) ? 3 : 0.5
+  );
+
+  node.attr("opacity", n => {
+    if (n.id === d.id) return 1;
+    const connected = links.some(l =>
+      (l.source.id === d.id && l.target.id === n.id) ||
+      (l.target.id === d.id && l.source.id === n.id)
+    );
+    return connected ? 1 : 0.2;
+  });
+});
+
+node.on("mousemove", function(event) {
+  tooltip
+    .style("left", (event.pageX + 15) + "px")
+    .style("top", (event.pageY - 10) + "px");
+});
+
+node.on("mouseout", function() {
+  tooltip.style("opacity", 0);
+  link.attr("stroke-opacity", d => d.type === "historical" ? 0.3 : 0.4)
+    .attr("stroke-width", d => d.type === "money" ? 2.5 : d.type === "competition" ? 1.5 : 1.2);
+  node.attr("opacity", 1);
+});
+
+// ═══════════════════════════════════════════════════════
+// SIMULATION TICK
+// ═══════════════════════════════════════════════════════
+
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  linkLabel
+    .attr("x", d => (d.source.x + d.target.x) / 2)
+    .attr("y", d => (d.source.y + d.target.y) / 2);
+
+  node.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+// ═══════════════════════════════════════════════════════
+// DRAG HANDLERS
+// ═══════════════════════════════════════════════════════
+
+function dragstarted(event, d) {
+  if (!event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(event, d) {
+  d.fx = event.x;
+  d.fy = event.y;
+}
+
+function dragended(event, d) {
+  if (!event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+// ═══════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════
+
+function resetZoom() {
+  svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+}
+
+function toggleLabels() {
+  labelsVisible = !labelsVisible;
+  labels.attr("opacity", labelsVisible ? 0.9 : 0);
+  linkLabel.attr("opacity", labelsVisible ? 0.7 : 0);
+}
+
+function exportPNG() {
+  const svgElement = document.querySelector("svg");
+  const svgData = new XMLSerializer().serializeToString(svgElement);
+  const canvas = document.createElement("canvas");
+  const scale = 2;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+  ctx.fillStyle = "#0a0e1a";
+  ctx.fillRect(0, 0, width, height);
+
+  const img = new Image();
+  const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(svgBlob);
+  img.onload = function() {
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    const a = document.createElement("a");
+    a.download = "igaming_mindmap.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  };
+  img.src = url;
+}
+
+// Initial zoom to fit
+setTimeout(() => {
+  const bounds = g.node().getBBox();
+  const dx = bounds.width, dy = bounds.height;
+  const x = bounds.x + dx / 2, y = bounds.y + dy / 2;
+  const scale = 0.85 / Math.max(dx / width, dy / height);
+  const translate = [width / 2 - scale * x, height / 2 - scale * y];
+  svg.transition().duration(1000).call(
+    zoom.transform,
+    d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+  );
+}, 2000);
+</script>
+</body>
+</html>
